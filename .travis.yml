@@ -8,7 +8,7 @@ before_script:
   - cd ./cspTools
   - tar -xf linux_amd64_deb.tar
   - sudo ./linux_amd64_deb/install.sh
-  - sudo /opt/cprocsp/sbin/amd64/cpconfig -license -set "5050E-H3010-06DCZ-EGXF5-FFUXC"
+  - sudo /opt/cprocsp/sbin/amd64/cpconfig -license -set "5050C-90030-05B5W-LTHVH-PFPU2"
   #install container
   - mkdir -p /var/opt/cprocsp/keys/travis/
   - cp -r ./G2001256.000 /var/opt/cprocsp/keys/travis/

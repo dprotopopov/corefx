@@ -18,7 +18,7 @@ image: Visual Studio 2017
 
 # install csp
 install:
-  - cmd: cspTools\CSPSetup.exe -silent -lang eng -noreboot -nodlg -args "PIDKEY=5050C-90030-05B5W-LTHVH-PFPU2 /L*v C:\csp.log /quiet"
+  - cmd: cspTools\CSPSetup.exe -silent -lang eng -noreboot -nodlg -args "PIDKEY=5050E-30030-06W59-AW5WP-D3G5M /quiet"
   - ps: Start-Sleep -s 160
   - cmd: regedit.exe /S cspTools\disableWarnings.reg
   - ps: Restart-Computer -Force
@@ -106,4 +106,4 @@ on_finish:
   # pushing all *.nupkg files in build directory recursively
 #- ps: Get-ChildItem "artifacts\packages\**\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 #- ps: Get-ChildItem "artifacts\packages\**\symbols\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-  - ps: Get-ChildItem "C:\csp.log" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  #- ps: Get-ChildItem "C:\csp.log" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }

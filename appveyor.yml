@@ -19,7 +19,7 @@ image: Visual Studio 2017
 # install csp
 install:
   - cmd: cspTools\CSPSetup.exe -silent -lang eng -noreboot -nodlg -args "PIDKEY=5050C-90030-05B5W-LTHVH-PFPU2 /quiet"
-  - ps: Start-Sleep -s 60
+  - ps: Start-Sleep -s 160
   - cmd: regedit.exe /S cspTools\disableWarnings.reg
   - ps: Restart-Computer -Force
   - ps: Start-Sleep -s 10

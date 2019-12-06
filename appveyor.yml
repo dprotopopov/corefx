@@ -28,13 +28,13 @@ install:
   - ps: Copy-Item -Force -Recurse ".\cspTools\G2012256.001" -Destination "$env:LOCALAPPDATA\Crypto Pro\"
   - ps: Copy-Item -Force -Recurse ".\cspTools\G2012512.000" -Destination "$env:LOCALAPPDATA\Crypto Pro\"
   - cmd: 'dir "C:\"' 
-  - cmd: 'dir "C:\Program Files\"' 
-  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"'
-  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -absorb -certs -provtype 80 -pattern "G2012256"'
-  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -absorb -certs -provtype 81 -pattern "G2012512"'
-  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -keyset -enum_c -verifyc -uniq'
-  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -keyset -enum_c -verifyc -fqcn'
-  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -enum -info -type PP_ENUMALGS'
+  - cmd: 'dir "C:\Program Files (x86)\"' 
+  - cmd: '"C:\Program Files (x86)\Crypto Pro\CSP\csptest" -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"'
+  - cmd: '"C:\Program Files (x86)\Crypto Pro\CSP\csptest" -absorb -certs -provtype 80 -pattern "G2012256"'
+  - cmd: '"C:\Program Files (x86)\Crypto Pro\CSP\csptest" -absorb -certs -provtype 81 -pattern "G2012512"'
+  - cmd: '"C:\Program Files (x86)\Crypto Pro\CSP\csptest" -keyset -enum_c -verifyc -uniq'
+  - cmd: '"C:\Program Files (x86)\Crypto Pro\CSP\csptest" -keyset -enum_c -verifyc -fqcn'
+  - cmd: '"C:\Program Files (x86)\Crypto Pro\CSP\csptest" -enum -info -type PP_ENUMALGS'
   # getting pached nuget packages with gost support
   - cmd: git clone https://github.com/CryptoProLLC/NetStandard.Library
   - ps: New-Item -ItemType Directory -Force -Path "$env:userprofile\.nuget\packages\netstandard.library"

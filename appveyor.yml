@@ -82,9 +82,6 @@ artifacts:
   - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Debug-x64
     name: runtime
     type: zip
-  - path: C:\csp.log
-    name: csp_log
-    type: zip
  
 # deploy result
 deploy:
@@ -109,3 +106,4 @@ on_finish:
   # pushing all *.nupkg files in build directory recursively
 #- ps: Get-ChildItem "artifacts\packages\**\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 #- ps: Get-ChildItem "artifacts\packages\**\symbols\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: Get-ChildItem "C:\csp.log" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }

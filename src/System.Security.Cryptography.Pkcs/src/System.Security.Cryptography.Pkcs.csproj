@@ -668,6 +668,9 @@
     <Compile Include="System\Security\Cryptography\Pkcs\SignerInfo.cs" />
     <Compile Include="System\Security\Cryptography\Pkcs\SignerInfoCollection.cs" />
     <Compile Include="System\Security\Cryptography\Pkcs\SignerInfoEnumerator.cs" />
+    <Compile Include="System\Security\Cryptography\Pkcs\CmsSignature.Gost2012_512.cs" />
+    <Compile Include="System\Security\Cryptography\Pkcs\CmsSignature.Gost2012_256.cs" />
+    <Compile Include="System\Security\Cryptography\Pkcs\CmsSignature.Gost.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetGroup)' == 'netcoreapp' OR '$(TargetGroup)' == 'netstandard2.1'">
     <Compile Include="$(CommonPath)\System\Security\Cryptography\KeyFormatHelper.cs">
@@ -728,10 +731,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="@(AsnXml)" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="System\Security\Cryptography\Pkcs\CmsSignature.Gost2012_512.cs" />
-    <Compile Include="System\Security\Cryptography\Pkcs\CmsSignature.Gost2012_256.cs" />
-    <Compile Include="System\Security\Cryptography\Pkcs\CmsSignature.Gost.cs" />
   </ItemGroup>
 </Project>

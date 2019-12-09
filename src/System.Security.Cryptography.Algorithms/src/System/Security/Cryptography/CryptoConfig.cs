@@ -306,6 +306,10 @@ namespace System.Security.Cryptography
                 //begin: gost
                 ht.Add("urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr3411",
                     Gost3411Type);
+                ht.Add("urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr34112012-256",
+                    Gost3411_2012_256Type);
+                ht.Add("urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr34112012-512",
+                    Gost3411_2012_512Type);
                 //end: gost
 
                 // Xml Encryption symmetric keys

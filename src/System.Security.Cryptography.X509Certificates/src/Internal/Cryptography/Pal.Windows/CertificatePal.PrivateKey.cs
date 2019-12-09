@@ -183,6 +183,16 @@ namespace Internal.Cryptography.Pal
         {
             return CopyWithPersistedCapiKey(((Gost3410CryptoServiceProvider)gost).CspKeyContainerInfo);
         }
+
+        public ICertificatePal CopyWithPrivateKey(Gost3410_2012_256 gost)
+        {
+            return CopyWithPersistedCapiKey(((Gost3410_2012_256CryptoServiceProvider)gost).CspKeyContainerInfo);
+        }
+
+        public ICertificatePal CopyWithPrivateKey(Gost3410_2012_512 gost)
+        {
+            return CopyWithPersistedCapiKey(((Gost3410_2012_512CryptoServiceProvider)gost).CspKeyContainerInfo);
+        }
         // end: gost
 
         public ICertificatePal CopyWithPrivateKey(RSA rsa)

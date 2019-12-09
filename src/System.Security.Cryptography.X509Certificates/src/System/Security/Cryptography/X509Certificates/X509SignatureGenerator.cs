@@ -56,6 +56,22 @@ namespace System.Security.Cryptography.X509Certificates
 
             return new Gost3410SignatureGenerator(key);
         }
+
+        public static X509SignatureGenerator CreateForGost(Gost3410_2012_256 key)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            return new Gost3410_2012_256SignatureGenerator(key);
+        }
+        
+        public static X509SignatureGenerator CreateForGost(Gost3410_2012_512 key)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            return new Gost3410_2012_512SignatureGenerator(key);
+        }
         //end: gost
     }
 }

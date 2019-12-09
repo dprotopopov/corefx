@@ -34,6 +34,8 @@ namespace Internal.Cryptography
         ICertificatePal CopyWithPrivateKey(RSA privateKey);
         //begin: gost
         ICertificatePal CopyWithPrivateKey(Gost3410 privateKey);
+        ICertificatePal CopyWithPrivateKey(Gost3410_2012_256 privateKey);
+        ICertificatePal CopyWithPrivateKey(Gost3410_2012_512 privateKey);
         //end: gost
     }
 }

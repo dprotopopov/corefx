@@ -48,8 +48,8 @@ namespace Internal.Cryptography.Pal
                     {
                         var cspObject = new GostKeyExchangeParameters();
                         cspObject.DecodeParameters(encodedParameters);
-                        cspObject.DecodePublicKey(encodedKeyValue);
-                        var cspBlobData = GostKeyExchangeParameters.EncodePublicBlob(cspObject);
+                        cspObject.DecodePublicKey(encodedKeyValue, algId);
+                        var cspBlobData = GostKeyExchangeParameters.EncodePublicBlob(cspObject, algId);
 
                         Gost3410CryptoServiceProvider gost_sp = new Gost3410CryptoServiceProvider();
                         gost_sp.ImportCspBlob(cspBlobData);
@@ -59,8 +59,8 @@ namespace Internal.Cryptography.Pal
                     {
                         var cspObject = new GostKeyExchangeParameters();
                         cspObject.DecodeParameters(encodedParameters);
-                        cspObject.DecodePublicKey(encodedKeyValue);
-                        var cspBlobData = GostKeyExchangeParameters.EncodePublicBlob(cspObject);
+                        cspObject.DecodePublicKey(encodedKeyValue, algId);
+                        var cspBlobData = GostKeyExchangeParameters.EncodePublicBlob(cspObject, algId);
 
                         Gost3410_2012_256CryptoServiceProvider gost_sp = new Gost3410_2012_256CryptoServiceProvider();
                         gost_sp.ImportCspBlob(cspBlobData);
@@ -70,8 +70,8 @@ namespace Internal.Cryptography.Pal
                     {
                         var cspObject = new GostKeyExchangeParameters();
                         cspObject.DecodeParameters(encodedParameters);
-                        cspObject.DecodePublicKey(encodedKeyValue);
-                        var cspBlobData = GostKeyExchangeParameters.EncodePublicBlob(cspObject);
+                        cspObject.DecodePublicKey(encodedKeyValue, algId);
+                        var cspBlobData = GostKeyExchangeParameters.EncodePublicBlob(cspObject, algId);
 
                         Gost3410_2012_512CryptoServiceProvider gost_sp = new Gost3410_2012_512CryptoServiceProvider();
                         gost_sp.ImportCspBlob(cspBlobData);

@@ -416,8 +416,8 @@ namespace System.Security.Cryptography
         public byte[] PrivateKey;
         public void DecodeParameters(byte[] data) { }
         public byte[] EncodeParameters() { throw null; }
-        public void DecodePublicKey(byte[] data) { }
-        public static byte[] EncodePublicBlob(GostKeyExchangeParameters publicKeyParameters) { throw null; }
+        public void DecodePublicKey(byte[] data, int algId) { }
+        public static byte[] EncodePublicBlob(GostKeyExchangeParameters publicKeyParameters, int algId) { throw null; }
 
     }
     //end: gost

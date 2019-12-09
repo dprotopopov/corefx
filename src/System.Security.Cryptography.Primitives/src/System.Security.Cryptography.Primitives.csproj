@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{DF73E985-E143-4BF5-9FA4-E199E7D36235}</ProjectGuid>
     <AssemblyName>System.Security.Cryptography.Primitives</AssemblyName>
@@ -32,6 +32,9 @@
     </Compile>
     <Compile Include="$(CommonPath)\System\Security\Cryptography\CryptoPool.cs">
       <Link>Common\System\Security\Cryptography\CryptoPool.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\System\Security\Cryptography\GostConstants.cs">
+      <Link>Common\System\Security\Cryptography\GostConstants.cs</Link>
     </Compile>
     <Compile Include="$(CommonPath)\System\Security\Cryptography\KeySizeHelpers.cs">
       <Link>Common\System\Security\Cryptography\KeySizeHelpers.cs</Link>

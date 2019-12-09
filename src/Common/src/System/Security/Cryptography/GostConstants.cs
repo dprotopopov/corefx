@@ -22,34 +22,34 @@
         //internal const int CRYPT_USER_PROTECTED = 0x00000002;
         //internal const int CRYPT_PREGEN = 0x00000040;
 
-        ///// <summary>
-        ///// OID алгоритма хэширования ГОСТ Р 34.11-2001
-        ///// </summary>
-        //internal const string OID_CP_GOST_R3411 = "1.2.643.2.2.9";
-        ///// <summary>
-        ///// OID алгоритма хэширования ГОСТ Р 34.11-2012 256
-        ///// </summary>
-        //internal const string OID_CP_GOST_R3411_12_256 = "1.2.643.7.1.1.2.2";
-        ///// <summary>
-        ///// OID алгоритма хэширования ГОСТ Р 34.11-2012 512
-        ///// </summary>
-        //internal const string OID_CP_GOST_R3411_12_512 = "1.2.643.7.1.1.2.3";
-        ///// <summary>
-        ///// OID алгоритма цифровой подписи ГОСТ Р 34.10-2001
-        ///// </summary>
-        //internal const string OID_CP_GOST_R3410EL = "1.2.643.2.2.19";
-        ///// <summary>
-        ///// OID алгоритма цифровой подписи ГОСТ Р 34.10-2012 256
-        ///// </summary>
-        //internal const string OID_CP_GOST_R3410_12_256 = "1.2.643.7.1.1.1.1";
-        ///// <summary>
-        ///// OID алгоритма цифровой подписи ГОСТ Р 34.10-2012 512
-        ///// </summary>
-        //internal const string OID_CP_GOST_R3410_12_512 = "1.2.643.7.1.1.1.2";
-        ///// <summary>
-        ///// OID параметров шифрования по умолчанию.
-        ///// </summary>
-        //internal const string OID_CipherVerbaO = "1.2.643.2.2.31.1";
+        /// <summary>
+        /// OID алгоритма хэширования ГОСТ Р 34.11-2001
+        /// </summary>
+        internal const string OID_CP_GOST_R3411 = "1.2.643.2.2.9";
+        /// <summary>
+        /// OID алгоритма хэширования ГОСТ Р 34.11-2012 256
+        /// </summary>
+        internal const string OID_CP_GOST_R3411_12_256 = "1.2.643.7.1.1.2.2";
+        /// <summary>
+        /// OID алгоритма хэширования ГОСТ Р 34.11-2012 512
+        /// </summary>
+        internal const string OID_CP_GOST_R3411_12_512 = "1.2.643.7.1.1.2.3";
+        /// <summary>
+        /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2001
+        /// </summary>
+        internal const string OID_CP_GOST_R3410EL = "1.2.643.2.2.19";
+        /// <summary>
+        /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2012 256
+        /// </summary>
+        internal const string OID_CP_GOST_R3410_12_256 = "1.2.643.7.1.1.1.1";
+        /// <summary>
+        /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2012 512
+        /// </summary>
+        internal const string OID_CP_GOST_R3410_12_512 = "1.2.643.7.1.1.1.2";
+        /// <summary>
+        /// OID параметров шифрования по умолчанию.
+        /// </summary>
+        internal const string OID_CipherVerbaO = "1.2.643.2.2.31.1";
 
         /// <summary>
         /// Алгоритм подписи ГОСТ Р 34.10-2001 + хеширования.
@@ -206,9 +206,9 @@
         internal const string TagPrivateKey = "PrivateKey";
 
         // string algorithm names
-        internal const string GOST3411_STRING = "GOST R 34.11-94";
-        internal const string GOST3411_2012_256STRING = "GR 34.11-2012 256";
-        internal const string GOST3411_2012_512STRING = "GR 34.11-2012 512";
+        internal const string GOST3411_STRING = "Gost3411";
+        internal const string GOST3411_2012_256STRING = "Gost3411_2012_256";
+        internal const string GOST3411_2012_512STRING = "Gost3411_2012_512";
 
         internal const string GOST3410_STRING = "Gost3410";
         internal const string GOST3410_2012_256STRING = "Gost3410_2012_256";

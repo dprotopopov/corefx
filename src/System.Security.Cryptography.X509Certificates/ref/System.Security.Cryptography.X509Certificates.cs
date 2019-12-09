@@ -20,15 +20,19 @@ namespace System.Security.Cryptography.X509Certificates
     {
         public CertificateRequest(System.Security.Cryptography.X509Certificates.X500DistinguishedName subjectName, System.Security.Cryptography.ECDsa key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
         public CertificateRequest(System.Security.Cryptography.X509Certificates.X500DistinguishedName subjectName, System.Security.Cryptography.RSA key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm, System.Security.Cryptography.RSASignaturePadding padding) { }
+        //begin: gost
         public CertificateRequest(System.Security.Cryptography.X509Certificates.X500DistinguishedName subjectName, System.Security.Cryptography.Gost3410 key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
-        //public CertificateRequest(System.Security.Cryptography.X509Certificates.X500DistinguishedName subjectName, System.Security.Cryptography.Gost3410_2012_256 key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
-        //public CertificateRequest(System.Security.Cryptography.X509Certificates.X500DistinguishedName subjectName, System.Security.Cryptography.Gost3410_2012_512 key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
+        public CertificateRequest(System.Security.Cryptography.X509Certificates.X500DistinguishedName subjectName, System.Security.Cryptography.Gost3410_2012_256 key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
+        public CertificateRequest(System.Security.Cryptography.X509Certificates.X500DistinguishedName subjectName, System.Security.Cryptography.Gost3410_2012_512 key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
+        //end: gost
         public CertificateRequest(System.Security.Cryptography.X509Certificates.X500DistinguishedName subjectName, System.Security.Cryptography.X509Certificates.PublicKey publicKey, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
         public CertificateRequest(string subjectName, System.Security.Cryptography.ECDsa key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
         public CertificateRequest(string subjectName, System.Security.Cryptography.RSA key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm, System.Security.Cryptography.RSASignaturePadding padding) { }
+        //begin: gost
         public CertificateRequest(string subjectName, System.Security.Cryptography.Gost3410 key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
-        //public CertificateRequest(string subjectName, System.Security.Cryptography.Gost3410_2012_256 key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
-        //public CertificateRequest(string subjectName, System.Security.Cryptography.Gost3410_2012_512 key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
+        public CertificateRequest(string subjectName, System.Security.Cryptography.Gost3410_2012_256 key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
+        public CertificateRequest(string subjectName, System.Security.Cryptography.Gost3410_2012_512 key, System.Security.Cryptography.HashAlgorithmName hashAlgorithm) { }
+        //end: gost
         public System.Collections.ObjectModel.Collection<System.Security.Cryptography.X509Certificates.X509Extension> CertificateExtensions { get { throw null; } }
         public System.Security.Cryptography.HashAlgorithmName HashAlgorithm { get { throw null; } }
         public System.Security.Cryptography.X509Certificates.PublicKey PublicKey { get { throw null; } }
@@ -49,6 +53,8 @@ namespace System.Security.Cryptography.X509Certificates
     public static partial class Gost3410CertificateExtensions
     {
         public static X509Certificate2 CopyWithPrivateKey(this System.Security.Cryptography.X509Certificates.X509Certificate2 certificate, Gost3410 privateKey) { throw null; }
+        public static X509Certificate2 CopyWithPrivateKey(this System.Security.Cryptography.X509Certificates.X509Certificate2 certificate, Gost3410_2012_256 privateKey) { throw null; }
+        public static X509Certificate2 CopyWithPrivateKey(this System.Security.Cryptography.X509Certificates.X509Certificate2 certificate, Gost3410_2012_512 privateKey) { throw null; }
         public static System.Security.Cryptography.Gost3410 GetGost3410PrivateKey(this System.Security.Cryptography.X509Certificates.X509Certificate2 certificate) { throw null; }
         public static System.Security.Cryptography.Gost3410_2012_256 GetGost3410_2012_256PrivateKey(this System.Security.Cryptography.X509Certificates.X509Certificate2 certificate) { throw null; }
         public static System.Security.Cryptography.Gost3410_2012_512 GetGost3410_2012_512PrivateKey(this System.Security.Cryptography.X509Certificates.X509Certificate2 certificate) { throw null; }
@@ -560,7 +566,11 @@ namespace System.Security.Cryptography.X509Certificates
         protected abstract System.Security.Cryptography.X509Certificates.PublicKey BuildPublicKey();
         public static System.Security.Cryptography.X509Certificates.X509SignatureGenerator CreateForECDsa(System.Security.Cryptography.ECDsa key) { throw null; }
         public static System.Security.Cryptography.X509Certificates.X509SignatureGenerator CreateForRSA(System.Security.Cryptography.RSA key, System.Security.Cryptography.RSASignaturePadding signaturePadding) { throw null; }
+        // begin: gost
         public static System.Security.Cryptography.X509Certificates.X509SignatureGenerator CreateForGost(System.Security.Cryptography.Gost3410 key) { throw null; }
+        public static System.Security.Cryptography.X509Certificates.X509SignatureGenerator CreateForGost(System.Security.Cryptography.Gost3410_2012_256 key) { throw null; }
+        public static System.Security.Cryptography.X509Certificates.X509SignatureGenerator CreateForGost(System.Security.Cryptography.Gost3410_2012_512 key) { throw null; }
+        // end: gost
         public abstract byte[] GetSignatureAlgorithmIdentifier(System.Security.Cryptography.HashAlgorithmName hashAlgorithm);
         public abstract byte[] SignData(byte[] data, System.Security.Cryptography.HashAlgorithmName hashAlgorithm);
     }

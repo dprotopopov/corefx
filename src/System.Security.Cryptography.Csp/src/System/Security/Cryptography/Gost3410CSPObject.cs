@@ -63,7 +63,7 @@ namespace System.Security.Cryptography
 
 
             var asnDecoder = new Asn1BerDecodeBuffer(data);
-            var publicKeyParameters = new GostR34102001PublicKeyParameters();
+            var publicKeyParameters = new Gost3410PublicKeyParameters();
             publicKeyParameters.Decode(asnDecoder);
 
             _digestParamSet = Asn1ObjectIdentifier.ToOidString(publicKeyParameters.DigestParamSet);
@@ -76,7 +76,7 @@ namespace System.Security.Cryptography
         {
             byte[] data;
 
-            var publicKeyParameters = new GostR34102001PublicKeyParameters();
+            var publicKeyParameters = new Gost3410PublicKeyParameters();
 
             publicKeyParameters.DigestParamSet = Asn1ObjectIdentifier.FromOidString(_digestParamSet);
             publicKeyParameters.PublicKeyParamSet = Asn1ObjectIdentifier.FromOidString(_publicKeyParamSet);
@@ -90,15 +90,32 @@ namespace System.Security.Cryptography
         }
 
 
-        public void DecodePublicKey(byte[] data)
+        public void DecodePublicKey(byte[] data, int algId)
         {
             if (data == null)
             {
                 throw new Exception("ArgumentNull - data");
             }
 
+            Asn1OctetString publicKey;
             var asnDecoder = new Asn1BerDecodeBuffer(data);
-            var publicKey = new GostR34102001PublicKey();
+            if (algId == GostConstants.CALG_GR3410EL)
+            {
+                publicKey = new Gost3410PublicKey();
+            }
+            else if (algId == GostConstants.CALG_GR3410_2012_256)
+            {
+                publicKey = new Gost3410_2012_256PublicKey();
+            }
+            else if (algId == GostConstants.CALG_GR3410_2012_512)
+            {
+                publicKey = new Gost3410_2012_512PublicKey();
+            }
+            else
+            {
+                throw new CryptographicException(
+                        SR.Cryptography_CSP_WrongKeySpec);
+            }
             publicKey.Decode(asnDecoder);
 
             _publicKey = publicKey.Value;

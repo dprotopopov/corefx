@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{3B7F91D7-0677-40CA-B4E7-D4E09D89A74E}</ProjectGuid>
     <AssemblyName>System.Security.Cryptography.Csp</AssemblyName>
@@ -199,11 +199,17 @@
     <Compile Include="$(CommonPath)\System\Security\Cryptography\Ber\Tokenizer.cs">
       <Link>Common\System\Security\Cryptography\Ber\Tokenizer.cs</Link>
     </Compile>
-    <Compile Include="$(CommonPath)\System\Security\Cryptography\GostR34102001PublicKey.cs">
-      <Link>Common\System\Security\Cryptography\GostR34102001PublicKey.cs</Link>
+    <Compile Include="$(CommonPath)\System\Security\Cryptography\Gost3410PublicKey.cs">
+      <Link>Common\System\Security\Cryptography\Gost3410PublicKey.cs</Link>
     </Compile>
-    <Compile Include="$(CommonPath)\System\Security\Cryptography\GostR34102001PublicKeyParameters.cs">
-      <Link>Common\System\Security\Cryptography\GostR34102001PublicKeyParameters.cs</Link>
+    <Compile Include="$(CommonPath)\System\Security\Cryptography\Gost3410PublicKeyParameters.cs">
+      <Link>Common\System\Security\Cryptography\Gost3410PublicKeyParameters.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\System\Security\Cryptography\Gost3410_2012_256PublicKey.cs">
+      <Link>Common\System\Security\Cryptography\Gost3410_2012_256PublicKey.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\System\Security\Cryptography\Gost3410_2012_512PublicKey.cs">
+      <Link>Common\System\Security\Cryptography\Gost3410_2012_512PublicKey.cs</Link>
     </Compile>
     <Compile Include="$(CommonPath)\System\Security\Cryptography\GostConstants.cs">
       <Link>Common\System\Security\Cryptography\GostConstants.cs</Link>

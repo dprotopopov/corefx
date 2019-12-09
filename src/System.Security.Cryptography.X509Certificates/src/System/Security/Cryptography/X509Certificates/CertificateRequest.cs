@@ -183,7 +183,7 @@ namespace System.Security.Cryptography.X509Certificates
         // begin: gost
 
         /// <summary>
-        /// Create a CertificateRequest for the specified subject name, ECDSA key, and hash algorithm.
+        /// Create a CertificateRequest for the specified subject name, GOST3410 key, and hash algorithm.
         /// </summary>
         /// <param name="subjectName">
         ///   The string representation of the subject name for the certificate or certificate request.
@@ -227,6 +227,128 @@ namespace System.Security.Cryptography.X509Certificates
         ///   The hash algorithm to use when signing the certificate or certificate request.
         /// </param>
         public CertificateRequest(X500DistinguishedName subjectName, Gost3410 key, HashAlgorithmName hashAlgorithm)
+        {
+            if (subjectName == null)
+                throw new ArgumentNullException(nameof(subjectName));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (string.IsNullOrEmpty(hashAlgorithm.Name))
+                throw new ArgumentException(SR.Cryptography_HashAlgorithmNameNullOrEmpty, nameof(hashAlgorithm));
+
+            SubjectName = subjectName;
+
+            _key = key;
+            _generator = X509SignatureGenerator.CreateForGost(key);
+            PublicKey = _generator.PublicKey;
+            HashAlgorithm = hashAlgorithm;
+        }
+
+        /// <summary>
+        /// Create a CertificateRequest for the specified subject name, GOST3410_2012_256 key, and hash algorithm.
+        /// </summary>
+        /// <param name="subjectName">
+        ///   The string representation of the subject name for the certificate or certificate request.
+        /// </param>
+        /// <param name="key">
+        ///   A Gost key whose public key material will be included in the certificate or certificate request.
+        ///   This key will be used as a private key if <see cref="CreateSelfSigned" /> is called.
+        /// </param>
+        /// <param name="hashAlgorithm">
+        ///   The hash algorithm to use when signing the certificate or certificate request.
+        /// </param>
+        /// <seealso cref="X500DistinguishedName(string)"/>
+        public CertificateRequest(string subjectName, Gost3410_2012_256 key, HashAlgorithmName hashAlgorithm)
+        {
+            if (subjectName == null)
+                throw new ArgumentNullException(nameof(subjectName));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (string.IsNullOrEmpty(hashAlgorithm.Name))
+                throw new ArgumentException(SR.Cryptography_HashAlgorithmNameNullOrEmpty, nameof(hashAlgorithm));
+
+            SubjectName = new X500DistinguishedName(subjectName);
+
+            _key = key;
+            _generator = X509SignatureGenerator.CreateForGost(key);
+            PublicKey = _generator.PublicKey;
+            HashAlgorithm = hashAlgorithm;
+        }
+
+        /// <summary>
+        /// Create a CertificateRequest for the specified subject name, GOST3410_2012_256 key, and hash algorithm.
+        /// </summary>
+        /// <param name="subjectName">
+        ///   The parsed representation of the subject name for the certificate or certificate request.
+        /// </param>
+        /// <param name="key">
+        ///   n GOST3410 key whose public key material will be included in the certificate or certificate request.
+        ///   This key will be used as a private key if <see cref="CreateSelfSigned" /> is called.
+        /// </param>
+        /// <param name="hashAlgorithm">
+        ///   The hash algorithm to use when signing the certificate or certificate request.
+        /// </param>
+        public CertificateRequest(X500DistinguishedName subjectName, Gost3410_2012_256 key, HashAlgorithmName hashAlgorithm)
+        {
+            if (subjectName == null)
+                throw new ArgumentNullException(nameof(subjectName));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (string.IsNullOrEmpty(hashAlgorithm.Name))
+                throw new ArgumentException(SR.Cryptography_HashAlgorithmNameNullOrEmpty, nameof(hashAlgorithm));
+
+            SubjectName = subjectName;
+
+            _key = key;
+            _generator = X509SignatureGenerator.CreateForGost(key);
+            PublicKey = _generator.PublicKey;
+            HashAlgorithm = hashAlgorithm;
+        }
+
+        /// <summary>
+        /// Create a CertificateRequest for the specified subject name, GOST3410_2012_512 key, and hash algorithm.
+        /// </summary>
+        /// <param name="subjectName">
+        ///   The string representation of the subject name for the certificate or certificate request.
+        /// </param>
+        /// <param name="key">
+        ///   A Gost key whose public key material will be included in the certificate or certificate request.
+        ///   This key will be used as a private key if <see cref="CreateSelfSigned" /> is called.
+        /// </param>
+        /// <param name="hashAlgorithm">
+        ///   The hash algorithm to use when signing the certificate or certificate request.
+        /// </param>
+        /// <seealso cref="X500DistinguishedName(string)"/>
+        public CertificateRequest(string subjectName, Gost3410_2012_512 key, HashAlgorithmName hashAlgorithm)
+        {
+            if (subjectName == null)
+                throw new ArgumentNullException(nameof(subjectName));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (string.IsNullOrEmpty(hashAlgorithm.Name))
+                throw new ArgumentException(SR.Cryptography_HashAlgorithmNameNullOrEmpty, nameof(hashAlgorithm));
+
+            SubjectName = new X500DistinguishedName(subjectName);
+
+            _key = key;
+            _generator = X509SignatureGenerator.CreateForGost(key);
+            PublicKey = _generator.PublicKey;
+            HashAlgorithm = hashAlgorithm;
+        }
+
+        /// <summary>
+        /// Create a CertificateRequest for the specified subject name, GOST3410_2012_512 key, and hash algorithm.
+        /// </summary>
+        /// <param name="subjectName">
+        ///   The parsed representation of the subject name for the certificate or certificate request.
+        /// </param>
+        /// <param name="key">
+        ///   n GOST3410 key whose public key material will be included in the certificate or certificate request.
+        ///   This key will be used as a private key if <see cref="CreateSelfSigned" /> is called.
+        /// </param>
+        /// <param name="hashAlgorithm">
+        ///   The hash algorithm to use when signing the certificate or certificate request.
+        /// </param>
+        public CertificateRequest(X500DistinguishedName subjectName, Gost3410_2012_512 key, HashAlgorithmName hashAlgorithm)
         {
             if (subjectName == null)
                 throw new ArgumentNullException(nameof(subjectName));
@@ -402,6 +524,16 @@ namespace System.Security.Cryptography.X509Certificates
                 {
                     return certificate.CopyWithPrivateKey(gost3410);
                 }
+                Gost3410_2012_256 gost3410_2012_256 = _key as Gost3410_2012_256;
+                if (gost3410_2012_256 != null)
+                {
+                    return certificate.CopyWithPrivateKey(gost3410_2012_256);
+                }
+                Gost3410_2012_512 gost3410_2012_512 = _key as Gost3410_2012_512;
+                if (gost3410_2012_512 != null)
+                {
+                    return certificate.CopyWithPrivateKey(gost3410_2012_512);
+                }
             }
 
             Debug.Fail($"Key was of no known type: {_key?.GetType().FullName ?? "null"}");
@@ -543,11 +675,21 @@ namespace System.Security.Cryptography.X509Certificates
                         generator = X509SignatureGenerator.CreateForECDsa(ecdsa);
                         break;
                     //begin: gost
-                    //case Oids.Gost3410EL:
-                    //    Gost3410 gost3410 = issuerCertificate.GetGost3410PrivateKey();
-                    //    key = gost3410;
-                    //    generator = X509SignatureGenerator.CreateForGost3410(gost3410);
-                    //    break;
+                    case Oids.Gost3410EL:
+                        Gost3410 gost3410 = issuerCertificate.GetGost3410PrivateKey();
+                        key = gost3410;
+                        generator = X509SignatureGenerator.CreateForGost(gost3410);
+                        break;
+                    case Oids.Gost3410_2012_256:
+                        Gost3410_2012_256 gost3410_2012_256 = issuerCertificate.GetGost3410_2012_256PrivateKey();
+                        key = gost3410_2012_256;
+                        generator = X509SignatureGenerator.CreateForGost(gost3410_2012_256);
+                        break;
+                    case Oids.Gost3410_2012_512:
+                        Gost3410_2012_512 gost3410_2012_512 = issuerCertificate.GetGost3410_2012_512PrivateKey();
+                        key = gost3410_2012_512;
+                        generator = X509SignatureGenerator.CreateForGost(gost3410_2012_512);
+                        break;
                     //end: gost
                     default:
                         throw new ArgumentException(

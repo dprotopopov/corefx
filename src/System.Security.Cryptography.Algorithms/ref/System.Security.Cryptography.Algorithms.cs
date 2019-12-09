@@ -632,6 +632,7 @@ namespace System.Security.Cryptography
         public override void SetHashAlgorithm(string strName) { }
         public override void SetKey(System.Security.Cryptography.AsymmetricAlgorithm key) { }
     }
+
     public sealed partial class RSASignaturePadding : System.IEquatable<System.Security.Cryptography.RSASignaturePadding>
     {
         internal RSASignaturePadding() { }
@@ -807,6 +808,60 @@ namespace System.Security.Cryptography
         public bool VerifyData(IO.Stream data, byte[] signature, HashAlgorithmName hashAlgorithm) { throw null; }
         public virtual bool VerifyData(ReadOnlySpan<byte> data, ReadOnlySpan<byte> signature, HashAlgorithmName hashAlgorithm) { throw null; }
         private static Exception HashAlgorithmNameNullOrEmpty() { throw null; }
+    }
+
+    public partial class GostSignatureFormatter : System.Security.Cryptography.AsymmetricSignatureFormatter
+    {
+        public GostSignatureFormatter() { }
+        public GostSignatureFormatter(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+        public override byte[] CreateSignature(byte[] rgbHash) { throw null; }
+        public override void SetHashAlgorithm(string strName) { }
+        public override void SetKey(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+    }
+
+    public partial class GostSignatureDeformatter : System.Security.Cryptography.AsymmetricSignatureDeformatter
+    {
+        public GostSignatureDeformatter() { }
+        public GostSignatureDeformatter(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+        public override void SetHashAlgorithm(string strName) { }
+        public override void SetKey(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+        public override bool VerifySignature(byte[] rgbHash, byte[] rgbSignature) { throw null; }
+    }
+
+    public partial class Gost2012_256SignatureFormatter : System.Security.Cryptography.AsymmetricSignatureFormatter
+    {
+        public Gost2012_256SignatureFormatter() { }
+        public Gost2012_256SignatureFormatter(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+        public override byte[] CreateSignature(byte[] rgbHash) { throw null; }
+        public override void SetHashAlgorithm(string strName) { }
+        public override void SetKey(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+    }
+
+    public partial class Gost2012_256SignatureDeformatter : System.Security.Cryptography.AsymmetricSignatureDeformatter
+    {
+        public Gost2012_256SignatureDeformatter() { }
+        public Gost2012_256SignatureDeformatter(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+        public override void SetHashAlgorithm(string strName) { }
+        public override void SetKey(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+        public override bool VerifySignature(byte[] rgbHash, byte[] rgbSignature) { throw null; }
+    }
+
+    public partial class Gost2012_512SignatureFormatter : System.Security.Cryptography.AsymmetricSignatureFormatter
+    {
+        public Gost2012_512SignatureFormatter() { }
+        public Gost2012_512SignatureFormatter(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+        public override byte[] CreateSignature(byte[] rgbHash) { throw null; }
+        public override void SetHashAlgorithm(string strName) { }
+        public override void SetKey(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+    }
+
+    public partial class Gost2012_512SignatureDeformatter : System.Security.Cryptography.AsymmetricSignatureDeformatter
+    {
+        public Gost2012_512SignatureDeformatter() { }
+        public Gost2012_512SignatureDeformatter(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+        public override void SetHashAlgorithm(string strName) { }
+        public override void SetKey(System.Security.Cryptography.AsymmetricAlgorithm key) { }
+        public override bool VerifySignature(byte[] rgbHash, byte[] rgbSignature) { throw null; }
     }
 
     public abstract partial class Gost3410_2012_512 : System.Security.Cryptography.AsymmetricAlgorithm

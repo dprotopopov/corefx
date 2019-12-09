@@ -117,7 +117,11 @@
   <ItemGroup>
     <Compile Include="System\Security\Cryptography\Xml\Gost2012_256KeyValue.cs" />
     <Compile Include="System\Security\Cryptography\Xml\Gost2012_512KeyValue.cs" />
+    <Compile Include="System\Security\Cryptography\Xml\GostSignatureDescription.cs" />
+    <Compile Include="System\Security\Cryptography\Xml\Gost2012_512SignatureDescription.cs" />
     <Compile Include="System\Security\Cryptography\Xml\GostKeyValue.cs" />
+    <Compile Include="System\Security\Cryptography\Xml\Gost2012_256SignatureDescription.cs" />
+    <Compile Include="System\Security\Cryptography\Xml\XmlDsigSmevTransform.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\$(AssemblyName).rd.xml" />

@@ -57,7 +57,7 @@ namespace System.Security.Cryptography
             }
 
             var asnDecoder = new Asn1BerDecodeBuffer(data);
-            var publicKeyParameters = new GostR34102001PublicKeyParameters();
+            var publicKeyParameters = new Gost3410PublicKeyParameters();
             publicKeyParameters.Decode(asnDecoder);
 
             DigestParamSet = Asn1ObjectIdentifier.ToOidString(publicKeyParameters.DigestParamSet);
@@ -70,7 +70,7 @@ namespace System.Security.Cryptography
         {
             byte[] data;
 
-            var publicKeyParameters = new GostR34102001PublicKeyParameters();
+            var publicKeyParameters = new Gost3410PublicKeyParameters();
 
             publicKeyParameters.DigestParamSet = Asn1ObjectIdentifier.FromOidString(DigestParamSet);
             publicKeyParameters.PublicKeyParamSet = Asn1ObjectIdentifier.FromOidString(PublicKeyParamSet);
@@ -84,7 +84,7 @@ namespace System.Security.Cryptography
         }
 
 
-        public void DecodePublicKey(byte[] data)
+        public void DecodePublicKey(byte[] data, int algId)
         {
             if (data == null)
             {
@@ -92,11 +92,29 @@ namespace System.Security.Cryptography
             }
 
             var asnDecoder = new Asn1BerDecodeBuffer(data);
-            var publicKey = new GostR34102001PublicKey();
-            publicKey.Decode(asnDecoder);
 
+            Asn1OctetString publicKey;
+            if (algId == GostConstants.CALG_GR3410EL)
+            {
+                publicKey = new Gost3410PublicKey();
+                publicKey.Decode(asnDecoder);
+            }
+            else if (algId == GostConstants.CALG_GR3410_2012_256)
+            {
+                publicKey = new Gost3410_2012_256PublicKey();
+                publicKey.Decode(asnDecoder);
+            }
+            else if (algId == GostConstants.CALG_GR3410_2012_512)
+            {
+                publicKey = new Gost3410_2012_512PublicKey();
+                publicKey.Decode(asnDecoder);
+            }
+            else
+            {
+                throw new CryptographicException(
+                    SR.Cryptography_CSP_WrongKeySpec);
+            }
             PublicKey = publicKey.Value;
-
         }
 
         internal static Gost2814789ParamSet CreateEncryptionParamSet(string value)
@@ -104,20 +122,40 @@ namespace System.Security.Cryptography
             return (value != null) ? new Gost2814789ParamSet(Asn1ObjectIdentifier.FromOidString(value).Value) : null;
         }
 
-        public static byte[] EncodePublicBlob(GostKeyExchangeParameters publicKeyParameters)
+        public static byte[] EncodePublicBlob(GostKeyExchangeParameters publicKeyParameters, int algId)
         {
             if (publicKeyParameters == null)
             {
                 throw new Exception("ArgumentNull - publicKeyParameters");
             }
 
+            int keySize;
+
+            if (algId == GostConstants.CALG_GR3410EL)
+            {
+                keySize = GostConstants.GOST_3410EL_SIZE;
+            }
+            else if (algId == GostConstants.CALG_GR3410_2012_256)
+            {
+                keySize = GostConstants.GOST3410_2012_256KEY_SIZE;
+            }
+            else if (algId == GostConstants.CALG_GR3410_2012_512)
+            {
+                keySize = GostConstants.GOST3410_2012_512KEY_SIZE;
+            }
+            else
+            {
+                throw new CryptographicException(
+                        SR.Cryptography_CSP_WrongKeySpec);
+            }                
+
             var encodeKeyParameters = publicKeyParameters.EncodeParameters();
             var importedKeyBytes = new byte[(encodeKeyParameters.Length + 16) + publicKeyParameters.PublicKey.Length];
             importedKeyBytes[0] = 6;
             importedKeyBytes[1] = 32;
-            Array.Copy(BitConverter.GetBytes(GostConstants.CALG_GR3410EL), 0, importedKeyBytes, 4, 4);
+            Array.Copy(BitConverter.GetBytes(algId), 0, importedKeyBytes, 4, 4);
             Array.Copy(BitConverter.GetBytes(GostConstants.GR3410_1_MAGIC), 0, importedKeyBytes, 8, 4);
-            Array.Copy(BitConverter.GetBytes(GostConstants.GOST_3410EL_SIZE), 0, importedKeyBytes, 12, 4);
+            Array.Copy(BitConverter.GetBytes(keySize), 0, importedKeyBytes, 12, 4);
             Array.Copy(encodeKeyParameters, 0, importedKeyBytes, 16, encodeKeyParameters.Length);
             Array.Copy(publicKeyParameters.PublicKey, 0, importedKeyBytes, encodeKeyParameters.Length + 16, publicKeyParameters.PublicKey.Length);
 

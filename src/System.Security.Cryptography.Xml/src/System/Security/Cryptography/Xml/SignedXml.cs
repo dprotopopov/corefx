@@ -423,20 +423,20 @@ namespace System.Security.Cryptography.Xml
                     if (SignedInfo.SignatureMethod == null)
                         SignedInfo.SignatureMethod = XmlDsigRSASHA256Url;
                 }
-                ////begin: gost
-                //else if (key is Gost3410)
-                //{
-                //    SignedInfo.SignatureMethod = XmlDsigGost3410Url;
-                //}
-                //else if (key is Gost3410_2012_256)
-                //{
-                //    SignedInfo.SignatureMethod = XmlDsigGost3410_2012_256Url;
-                //}
-                //else if (key is Gost3410_2012_512)
-                //{
-                //    SignedInfo.SignatureMethod = XmlDsigGost3410_2012_512Url;
-                //}
-                ////end: gost
+                //begin: gost
+                else if (key is Gost3410)
+                {
+                    SignedInfo.SignatureMethod = XmlDsigGost3410Url;
+                }
+                else if (key is Gost3410_2012_256)
+                {
+                    SignedInfo.SignatureMethod = XmlDsigGost3410_2012_256Url;
+                }
+                else if (key is Gost3410_2012_512)
+                {
+                    SignedInfo.SignatureMethod = XmlDsigGost3410_2012_512Url;
+                }
+                //end: gost
                 else
                 {
                     throw new CryptographicException(SR.Cryptography_Xml_CreatedKeyFailed);
@@ -551,23 +551,23 @@ namespace System.Security.Cryptography.Xml
                             return key;
                     }
                 }
-                ////begin: gost
-                //GostKeyValue gost3410KeyValue = _keyInfoEnum.Current as GostKeyValue;
-                //if (gost3410KeyValue != null)
-                //{
-                //    return gost3410KeyValue.Key;
-                //}
-                //Gost2012_256KeyValue gost3410_2012_256KeyValue = _keyInfoEnum.Current as Gost2012_256KeyValue;
-                //if (gost3410_2012_256KeyValue != null)
-                //{
-                //    return gost3410_2012_256KeyValue.Key;
-                //}
-                //Gost2012_512KeyValue gost3410_2012_512KeyValue = _keyInfoEnum.Current as Gost2012_512KeyValue;
-                //if (gost3410_2012_512KeyValue != null)
-                //{
-                //    return gost3410_2012_512KeyValue.Key;
-                //}
-                ////end: gost
+                //begin: gost
+                GostKeyValue gost3410KeyValue = _keyInfoEnum.Current as GostKeyValue;
+                if (gost3410KeyValue != null)
+                {
+                    return gost3410KeyValue.Key;
+                }
+                Gost2012_256KeyValue gost3410_2012_256KeyValue = _keyInfoEnum.Current as Gost2012_256KeyValue;
+                if (gost3410_2012_256KeyValue != null)
+                {
+                    return gost3410_2012_256KeyValue.Key;
+                }
+                Gost2012_512KeyValue gost3410_2012_512KeyValue = _keyInfoEnum.Current as Gost2012_512KeyValue;
+                if (gost3410_2012_512KeyValue != null)
+                {
+                    return gost3410_2012_512KeyValue.Key;
+                }
+                //end: gost
             }
 
             return null;

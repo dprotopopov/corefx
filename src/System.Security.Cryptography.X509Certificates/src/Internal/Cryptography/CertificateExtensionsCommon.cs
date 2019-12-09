@@ -63,7 +63,6 @@ namespace Internal.Cryptography.Pal
             if (typeof(T) == typeof(Gost3410))
                 return (T)(object)certificate.Pal.GetGost3410PrivateKey();
 
-
             if (typeof(T) == typeof(Gost3410_2012_256))
                 return (T)(object)certificate.Pal.GetGost3410_2012_256PrivateKey();
 

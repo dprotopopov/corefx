@@ -77,6 +77,22 @@ namespace System.Security.Cryptography.Xml
                     return new HMACMD5();
                 case "http://www.w3.org/2001/04/xmlenc#tripledes-cbc":
                     return TripleDES.Create();
+
+                // begin: gost
+                case SignedXml.XmlDsigGost3411Url:
+                    return Gost3411.Create();
+                case SignedXml.XmlDsigGost3411_2012_256Url:
+                    return Gost3411_2012_256.Create();
+                case SignedXml.XmlDsigGost3411_2012_512Url:
+                    return Gost3411_2012_512.Create();
+
+                case SignedXml.XmlDsigGost3410Url:
+                    return new GostSignatureDescription();
+                case SignedXml.XmlDsigGost3410_2012_256Url:
+                    return new Gost2012_256SignatureDescription();
+                case SignedXml.XmlDsigGost3410_2012_512Url:
+                    return new Gost2012_512SignatureDescription();
+                // end: gost
             }
 
             return null;

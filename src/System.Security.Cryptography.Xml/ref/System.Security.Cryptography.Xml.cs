@@ -315,6 +315,34 @@ namespace System.Security.Cryptography.Xml
         public override System.Xml.XmlElement GetXml() { throw null; }
         public override void LoadXml(System.Xml.XmlElement value) { }
     }
+
+    public partial class Gost2012_256KeyValue : System.Security.Cryptography.Xml.KeyInfoClause
+    {
+        public Gost2012_256KeyValue() { }
+        public Gost2012_256KeyValue(System.Security.Cryptography.Gost3410_2012_256 key) { }
+        public Gost3410_2012_256 Key { get { throw null; } set { } }
+        public override System.Xml.XmlElement GetXml() { throw null; }
+        public override void LoadXml(System.Xml.XmlElement value) { }
+    }
+
+    public partial class Gost2012_512KeyValue : System.Security.Cryptography.Xml.KeyInfoClause
+    {
+        public Gost2012_512KeyValue() { }
+        public Gost2012_512KeyValue(System.Security.Cryptography.Gost3410_2012_512 key) { }
+        public Gost3410_2012_512 Key { get { throw null; } set { } }
+        public override System.Xml.XmlElement GetXml() { throw null; }
+        public override void LoadXml(System.Xml.XmlElement value) { }
+    }
+
+    public partial class GostKeyValue : System.Security.Cryptography.Xml.KeyInfoClause
+    {
+        public GostKeyValue() { }
+        public GostKeyValue(System.Security.Cryptography.Gost3410 key) { }
+        public Gost3410 Key { get { throw null; } set { } }
+        public override System.Xml.XmlElement GetXml() { throw null; }
+        public override void LoadXml(System.Xml.XmlElement value) { }
+    }
+
     public partial class Signature
     {
         public Signature() { }
@@ -557,5 +585,24 @@ namespace System.Security.Cryptography.Xml
         public override object GetOutput(System.Type type) { throw null; }
         public override void LoadInnerXml(System.Xml.XmlNodeList nodeList) { }
         public override void LoadInput(object obj) { }
+    }
+    public partial class XmlDsigSmevTransform : System.Security.Cryptography.Xml.Transform
+    {
+        public XmlDsigSmevTransform() { }
+        public bool UseOldEscaping { get { throw null; } set { throw null; } }
+
+        public override Type[] InputTypes { get { throw null; } }
+
+        public override Type[] OutputTypes { get { throw null; } }
+
+        public override object GetOutput() { throw null; }
+
+        public override object GetOutput(Type type) { throw null; }
+
+        public override void LoadInnerXml(System.Xml.XmlNodeList nodeList) { throw null; }
+
+        public override void LoadInput(object obj) { throw null; }
+
+        protected override System.Xml.XmlNodeList GetInnerXml() { throw null; }
     }
 }

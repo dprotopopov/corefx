@@ -135,7 +135,6 @@ namespace System.Security.Cryptography
         public static System.Security.Cryptography.HashAlgorithmName Gost3411 { get { throw null; } }
         public static System.Security.Cryptography.HashAlgorithmName Gost3411_2012_256 { get { throw null; } }
         public static System.Security.Cryptography.HashAlgorithmName Gost3411_2012_512 { get { throw null; } }
-        public static System.Security.Cryptography.HashAlgorithmName Gost28147 { get { throw null; } }
 
         public override bool Equals(object obj) { throw null; }
         public bool Equals(System.Security.Cryptography.HashAlgorithmName other) { throw null; }

@@ -6,9 +6,9 @@ dotnet: 2.0.3
 before_script:
   - sudo apt install lsb lsb-core alien
   - cd ./cspTools
-  - tar -xf linux-amd64_deb.tgz
-  - sudo ./linux-amd64_deb/install.sh
-  - sudo /opt/cprocsp/sbin/amd64/cpconfig -license -set "5050E-H3010-06DCZ-EGXF5-FFUXC"
+  - tar -xf linux_amd64_deb.tar
+  - sudo ./linux_amd64_deb/install.sh
+  - sudo /opt/cprocsp/sbin/amd64/cpconfig -license -set "5050C-90030-05B5W-LTHVH-PFPU2"
   #install container
   - mkdir -p /var/opt/cprocsp/keys/travis/
   - cp -r ./G2001256.000 /var/opt/cprocsp/keys/travis/
@@ -19,6 +19,10 @@ before_script:
   - /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 81 -pattern "G2012512"
   - /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -uniq
   - /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -fqcn
+ # getting patched nuget packages with gost support
+  - git clone https://github.com/CryptoProLLC/NetStandard.Library
+  - mkdir -p ~/.nuget/packages/netstandard.library
+  - cp -r ./NetStandard.Library/nugetReady/netstandard.library ~/.nuget/packages/
  # disable warnings
   - sudo sed -i '/[Parameters]/a warning_time_gen_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
   - sudo sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
@@ -34,7 +38,11 @@ script:
   - .dotnet/dotnet msbuild src/System.Security.Cryptography.Csp/tests/ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410_2012_256CryptoServiceProviderTests" /p:ForceRunTests=true
   - .dotnet/dotnet msbuild src/System.Security.Cryptography.Csp/tests/ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410_2012_512CryptoServiceProviderTests" /p:ForceRunTests=true
   - .dotnet/dotnet msbuild src/System.Security.Cryptography.Csp/tests/ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Csp.Tests.Gost28147CryptoServiceProviderTest" /p:ForceRunTests=true
+  - .dotnet/dotnet msbuild src/System.Security.Cryptography.Xml/tests/ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Xml.Tests.GostSignedXmlTest"  /p:ForceRunTests=true
   - .dotnet/dotnet msbuild src/Common/tests/  /t:BuildAndTest   /p:ForceRunTests=true
+  #- .dotnet/dotnet msbuild /t:BuildAndTest src/System.Security.Cryptography.X509Certificates/tests/
+  #- .dotnet/dotnet msbuild /t:BuildAndTest src/System.Security.Cryptography.Pkcs/tests/
+  #- .dotnet/dotnet msbuild /t:BuildAndTest src/System.Security.Cryptography.Xml/tests/
 notifications:
   email:
     on_success: never # default: change

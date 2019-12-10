@@ -15,7 +15,8 @@ internal partial class Interop
             KP_IV = 1,
             KP_PERMISSIONS = 6,
             KP_ALGID = 7,
-            KP_KEYLEN = 9
+            KP_KEYLEN = 9,
+            KP_CIPHEROID = 104,
         }
 
         [DllImport(Libraries.Advapi32, SetLastError = true)]

@@ -39,6 +39,9 @@ namespace System.Security.Cryptography.Hashing.Algorithms.Tests
                 new object[] { new HMACSHA256(), },
                 new object[] { new HMACSHA384(), },
                 new object[] { new HMACSHA512(), },
+                new object[] { new HMACGost3411(), },
+                new object[] { new HMACGost3411_2012_256(), },
+                new object[] { new HMACGost3411_2012_512(), },
             };
         }
     }

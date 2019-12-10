@@ -935,6 +935,51 @@ namespace System.Security.Cryptography
         public static new System.Security.Cryptography.Gost3411_2012_512 Create(string hashName) { throw null; }
     }
 
+    public partial class HMACGost3411 : System.Security.Cryptography.HMAC
+    {
+        public HMACGost3411() { }
+        public HMACGost3411(byte[] key) { }
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        // public HMACGost3411(byte[] key, bool useManagedSha1) { }
+        public override byte[] Key { get { throw null; } set { } }
+        protected override void Dispose(bool disposing) { }
+        protected override void HashCore(byte[] rgb, int ib, int cb) { }
+        protected override void HashCore(System.ReadOnlySpan<byte> source) { }
+        protected override byte[] HashFinal() { throw null; }
+        public override void Initialize() { }
+        protected override bool TryHashFinal(System.Span<byte> destination, out int bytesWritten) { throw null; }
+    }
+
+        public partial class HMACGost3411_2012_256 : System.Security.Cryptography.HMAC
+    {
+        public HMACGost3411_2012_256() { }
+        public HMACGost3411_2012_256(byte[] key) { }
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        // public HMACGost3411(byte[] key, bool useManagedSha1) { }
+        public override byte[] Key { get { throw null; } set { } }
+        protected override void Dispose(bool disposing) { }
+        protected override void HashCore(byte[] rgb, int ib, int cb) { }
+        protected override void HashCore(System.ReadOnlySpan<byte> source) { }
+        protected override byte[] HashFinal() { throw null; }
+        public override void Initialize() { }
+        protected override bool TryHashFinal(System.Span<byte> destination, out int bytesWritten) { throw null; }
+    }
+
+        public partial class HMACGost3411_2012_512 : System.Security.Cryptography.HMAC
+    {
+        public HMACGost3411_2012_512() { }
+        public HMACGost3411_2012_512(byte[] key) { }
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
+        // public HMACGost3411(byte[] key, bool useManagedSha1) { }
+        public override byte[] Key { get { throw null; } set { } }
+        protected override void Dispose(bool disposing) { }
+        protected override void HashCore(byte[] rgb, int ib, int cb) { }
+        protected override void HashCore(System.ReadOnlySpan<byte> source) { }
+        protected override byte[] HashFinal() { throw null; }
+        public override void Initialize() { }
+        protected override bool TryHashFinal(System.Span<byte> destination, out int bytesWritten) { throw null; }
+    }
+
     public enum GostKeyWrapMethod
     {
         GostKeyWrap,

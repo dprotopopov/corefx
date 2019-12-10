@@ -12,103 +12,201 @@ namespace Internal.Cryptography
     {
         private sealed class CryptoApiHmacProvider : HashProvider
         {
-            // private readonly byte[] _key;
-            // private readonly SafeCAPIHashHandle _ctx(1);
-
-            // private bool _running;
+            private readonly byte[] _key;
+            private SafeHashHandle _hHash;
+            private SafeProvHandle _hProv;
+            private SafeKeyHandle _hKey;
+            private readonly int _calgHash;
+            private readonly int _providerType;
 
             public override int HashSizeInBytes { get; }
 
             internal CryptoApiHmacProvider(int providerType, int calgHash, byte[] key)
             {
-                // _key = key.CloneByteArray();
-                // int hashSizeInBytes = 0;
-                // _ctx = Interop.AppleCrypto.HmacCreate(algorithm, ref hashSizeInBytes);
+                if (key == null)
+                    throw new ArgumentNullException("key");
+                if (!ValidKeySize(key.Length, calgHash))
+                {
+                    throw new ArgumentException(
+                        SR.Format(
+                            SR.Cryptography_InvalidKeySize));
+                }
+                _key = key.CloneByteArray();
+                _calgHash = calgHash;
+                _providerType = providerType;
+                SetKey();
+                int dwHashSize = 0;
+                int cbHashSize = sizeof(int);
+                if (!Interop.Advapi32.CryptGetHashParam(_hHash, Interop.Advapi32.CryptHashProperty.HP_HASHSIZE, out dwHashSize, ref cbHashSize, 0))
+                {
+                    int hr = Marshal.GetHRForLastWin32Error();
+                    throw new CryptographicException(hr);
+                }
+                if (dwHashSize < 0)
+                {
+                    throw new PlatformNotSupportedException(
+                        SR.Format(
+                            SR.Cryptography_UnknownHashAlgorithm, providerType, calgHash));
+                }
+                HashSizeInBytes = dwHashSize;
+            }
 
-                // if (hashSizeInBytes < 0)
-                // {
-                //     _ctx.Dispose();
-                //     throw new PlatformNotSupportedException(
-                //         SR.Format(
-                //             SR.Cryptography_UnknownHashAlgorithm,
-                //             Enum.GetName(typeof(Interop.AppleCrypto.PAL_HashAlgorithm), algorithm)));
-                // }
-
-                // if (_ctx.IsInvalid)
-                // {
-                //     _ctx.Dispose();
-                //     throw new CryptographicException();
-                // }
-
-                // HashSizeInBytes = hashSizeInBytes;
-                throw new PlatformNotSupportedException();
+            private bool ValidKeySize(int keysize, int calgHash)
+            {
+                if (calgHash == GostConstants.CALG_GR3411_2012_512_HMAC && keysize != 64)
+                {
+                    return false;
+                } else if (calgHash == GostConstants.CALG_GR3411_2012_256_HMAC && keysize != 32)
+                {
+                    return false;
+                } else if (calgHash == GostConstants.CALG_GR3411_HMAC && keysize != 32)
+                {
+                    return false;
+                }
+                return true;
             }
 
             public override void AppendHashData(ReadOnlySpan<byte> data)
             {
-                // if (!_running)
-                // {
-                //     SetKey();
-                // }
-
-                // if (Interop.AppleCrypto.HmacUpdate(_ctx, data, data.Length) != 1)
-                // {
-                //     throw new CryptographicException();
-                // }
+                bool ret = Interop.Advapi32.CryptHashData(_hHash, data.ToArray(), data.Length, 0);
+                if (!ret)
+                    throw new CryptographicException(Marshal.GetLastWin32Error());
             }
 
             private void SetKey()
             {
-                // if (Interop.AppleCrypto.HmacInit(_ctx, _key, _key.Length) != 1)
-                // {
-                //     throw new CryptographicException();
-                // }
 
-                // _running = true;
+                SafeProvHandle hProv;
+                if (!Interop.Advapi32.CryptAcquireContext(out hProv, null, null, _providerType, (uint)Interop.Advapi32.CryptAcquireContextFlags.CRYPT_VERIFYCONTEXT))
+                {
+                    int hr = Marshal.GetHRForLastWin32Error();
+                    throw new CryptographicException(hr);
+                }
+                SafeHashHandle hTmpHash;
+                int keyHashCalg = GostConstants.CALG_GR3411;
+                int keyCalg = GostConstants.CALG_G28147;
+                if (_calgHash == GostConstants.CALG_GR3411_2012_512_HMAC )
+                {
+                    keyHashCalg = GostConstants.CALG_GR3411_2012_512;
+                    keyCalg = GostConstants.CALG_SYMMETRIC_512;
+                }
+                if (!Interop.Advapi32.CryptCreateHash(hProv, keyHashCalg, SafeKeyHandle.InvalidHandle, Interop.Advapi32.CryptCreateHashFlags.None, out hTmpHash))
+                {
+                    int hr = Marshal.GetHRForLastWin32Error();
+                    throw new CryptographicException(hr);
+                }
+                if (!Interop.Advapi32.CryptSetHashParam(hTmpHash, Interop.Advapi32.CryptHashProperty.HP_HASHVAL, _key ,0))
+                {
+                    int hr = Marshal.GetHRForLastWin32Error();
+                    throw new CryptographicException(hr);
+                }
+                SafeKeyHandle hMacKey;
+                if (!Interop.Advapi32.CryptDeriveKey(hProv, keyCalg, hTmpHash, 0, out hMacKey))
+                {
+                    int hr = Marshal.GetHRForLastWin32Error();
+                    throw new CryptographicException(hr);
+                }
+                //Create Hash with imported Key
+                SafeHashHandle hMacHash;
+                if (!Interop.Advapi32.CryptCreateHash(hProv, _calgHash, hMacKey, Interop.Advapi32.CryptCreateHashFlags.None, out hMacHash))
+                {
+                    int hr = Marshal.GetHRForLastWin32Error();
+                    throw new CryptographicException(hr);
+                }
+                _hProv = hProv;
+                _hKey = hMacKey;
+                _hHash = hMacHash;
             }
 
             public override unsafe byte[] FinalizeHashAndReset()
             {
                 var output = new byte[HashSizeInBytes];
-                // bool success = TryFinalizeHashAndReset(output, out int bytesWritten);
-                // Debug.Assert(success);
-                // Debug.Assert(bytesWritten == output.Length);
+                bool success = TryFinalizeHashAndReset(output, out int bytesWritten);
+                Debug.Assert(success);
+                Debug.Assert(bytesWritten == output.Length);
                 return output;
             }
 
             public override bool TryFinalizeHashAndReset(Span<byte> destination, out int bytesWritten)
             {
-                // if (destination.Length < HashSizeInBytes)
-                // {
-                //     bytesWritten = 0;
-                //     return false;
-                // }
+                if (destination.Length < HashSizeInBytes)
+                {
+                    bytesWritten = 0;
+                    return false;
+                }
 
-                // if (!_running)
-                // {
-                //     SetKey();
-                // }
+                int hashSize = HashSizeInBytes;
+                if (!Interop.Advapi32.CryptGetHashParam(_hHash, Interop.Advapi32.CryptHashProperty.HP_HASHVAL, destination, ref hashSize, 0))
+                {
+                    int hr = Marshal.GetHRForLastWin32Error();
+                    throw new CryptographicException(hr);
+                }
+                bytesWritten = hashSize;
 
-                // if (Interop.AppleCrypto.HmacFinal(_ctx, destination, destination.Length) != 1)
-                // {
-                //     throw new CryptographicException();
-                // }
-
-                // bytesWritten = HashSizeInBytes;
-                // _running = false;
-                bytesWritten = 0;
+                //reinitialize
+                _hHash.Dispose();
+                _hKey.Dispose();
+                _hProv.Dispose();
+                SetKey();
                 return true;
             }
 
             public override void Dispose(bool disposing)
             {
-                // if (disposing)
-                // {
-                //     _ctx?.Dispose();
-                //     Array.Clear(_key, 0, _key.Length);
-                // }
+                if (disposing)
+                {
+                    _hHash?.Dispose();
+                    _hKey?.Dispose();
+                    _hProv?.Dispose();
+                }
             }
-        }
+
+            internal static byte[] EncodeSimpleBlob(byte[] ukm, byte[] encryptedKey, byte[] mac, byte[] keyParams, int algid)
+            {
+               byte[] ret = new byte[16
+                   + GostConstants.SEANCE_VECTOR_LEN
+                   + GostConstants.G28147_KEYLEN
+                   + GostConstants.EXPORT_IMIT_SIZE
+                   + keyParams.Length];
+               int pos = 0;
+
+               // CRYPT_SIMPLEBLOB_->CRYPT_SIMPLEBLOB_HEADER
+               ret[pos] = GostConstants.SIMPLEBLOB;
+               pos++;
+               ret[pos] = GostConstants.CSP_CUR_BLOB_VERSION;
+               pos++;
+
+               pos += 2; // Reserved
+
+               byte[] balgid = BitConverter.GetBytes(algid);
+               Array.Copy(balgid, 0, ret, pos, 4);
+               pos += 4;
+
+               byte[] magic = BitConverter.GetBytes(GostConstants.SIMPLEBLOB_MAGIC);
+               Array.Copy(magic, 0, ret, pos, 4);
+               pos += 4;
+
+               byte[] ealgid = BitConverter.GetBytes(GostConstants.CALG_G28147);
+               Array.Copy(ealgid, 0, ret, pos, 4);
+               pos += 4;
+
+               // CRYPT_SIMPLEBLOB_->bSV
+               Array.Copy(ukm, 0, ret, pos, GostConstants.SEANCE_VECTOR_LEN);
+               pos += GostConstants.SEANCE_VECTOR_LEN;
+
+               // CRYPT_SIMPLEBLOB_->bEncryptedKey
+               Array.Copy(encryptedKey, 0, ret, pos, GostConstants.G28147_KEYLEN);
+               pos += GostConstants.G28147_KEYLEN;
+
+               // CRYPT_SIMPLEBLOB_->bMacKey
+               Array.Copy(mac, 0, ret, pos, GostConstants.EXPORT_IMIT_SIZE);
+               pos += GostConstants.EXPORT_IMIT_SIZE;
+
+               // CRYPT_SIMPLEBLOB_->bEncryptionParamSet
+               Array.Copy(keyParams, 0, ret, pos, keyParams.Length);
+               return ret;
+            }
+                }
 
         private sealed class CryptoApiHashProvider : HashProvider
         {
@@ -182,6 +280,8 @@ namespace Internal.Cryptography
                     int hr = Marshal.GetHRForLastWin32Error();
                     throw new CryptographicException(hr);
                 }
+                bytesWritten = hashSize;
+
                 //reinitialize
                 _hHash.Dispose();
                 if (!Interop.Advapi32.CryptCreateHash(_hProv, _calgHash, SafeKeyHandle.InvalidHandle, (int)Interop.Advapi32.CryptCreateHashFlags.None, out _hHash))
@@ -189,7 +289,6 @@ namespace Internal.Cryptography
                     int hr = Marshal.GetHRForLastWin32Error();
                     throw new CryptographicException(hr);
                 }
-                bytesWritten = hashSize;
                 return true;
             }
 

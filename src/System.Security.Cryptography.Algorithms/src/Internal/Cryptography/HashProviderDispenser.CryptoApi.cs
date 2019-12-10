@@ -69,11 +69,11 @@ namespace Internal.Cryptography
                 case HashAlgorithmNames.SHA512:
                     return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_SHA512, key);
                 case HashAlgorithmNames.GOST3411:
-                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_GR3411, key);
+                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_GR3411_HMAC, key);
                 case HashAlgorithmNames.GOST3411_2012_256:
-                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_GR3411_2012_256, key);
+                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_GR3411_2012_256_HMAC, key);
                 case HashAlgorithmNames.GOST3411_2012_512:
-                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2012_512, GostConstants.CALG_GR3411_2012_512, key);
+                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2012_512, GostConstants.CALG_GR3411_2012_512_HMAC, key);
             }
 
             throw new CryptographicException(SR.Format(SR.Cryptography_UnknownHashAlgorithm, hashAlgorithmId));

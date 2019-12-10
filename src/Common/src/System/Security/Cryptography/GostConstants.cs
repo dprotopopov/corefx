@@ -123,6 +123,7 @@
         internal const int CALG_GR3410_2012_512 = 0x2e3d;
         internal const int CALG_G28147 = 0x661e;
         internal const int CALG_G28147_IMIT = 0x801f;
+        internal const int CALG_SYMMETRIC_512 = 0x6622;
         internal const int CALG_SIMPLE_EXPORT = 0x6620;
         internal const int CALG_PRO_EXPORT = 0x661f;
         internal const int CALG_PRO12_EXPORT = 0x6621;

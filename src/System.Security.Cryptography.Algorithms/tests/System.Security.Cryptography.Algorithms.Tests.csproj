@@ -122,6 +122,9 @@
     <Compile Include="Gost3411Tests.cs" />
     <Compile Include="Gost3411_2012_256Tests.cs" />
     <Compile Include="Gost3411_2012_512Tests.cs" />
+    <Compile Include="HmacGost3411Tests.cs" />
+    <Compile Include="HmacGost3411_2012_256Tests.cs" />
+    <Compile Include="HmacGost3411_2012_512Tests.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetsWindows)' == 'true'">
     <Compile Include="DefaultECDsaProvider.Windows.cs" />

@@ -62,6 +62,23 @@ internal partial class Interop
                 }
             }
         }
+        /* structure for use with CryptSetHashParam with CALG_HMAC*/
+        [StructLayout(LayoutKind.Sequential)]
+        public struct HMAC_INFO {
+            public int      HashAlgid;
+            public IntPtr   pbInnerString;
+            public uint   cbInnerString;
+            public IntPtr   pbOuterString;
+            public uint   cbOuterString;
+            //We use only HashAlgid, so all other fields can be set to zerro
+            internal unsafe byte[] ToByteArray()
+            {
+                int numBytes = 3*sizeof(int) + 2*sizeof(IntPtr);
+                byte[] data = new byte[numBytes];
+                BitConverter.GetBytes(HashAlgid).CopyTo(data, 0);
+                return data;
+            }
+        }
 
         [DllImport(Libraries.Advapi32, CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern bool CryptSetHashParam(SafeHashHandle hHash, CryptHashProperty dwParam, byte[] buffer, int dwFlags);

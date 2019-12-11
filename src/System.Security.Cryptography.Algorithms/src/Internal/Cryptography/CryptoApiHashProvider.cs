@@ -73,23 +73,46 @@ namespace Internal.Cryptography
                     throw new CryptographicException(Marshal.GetLastWin32Error());
             }
 
+            private void GetCalgsFromHMAC(int hmacAlgorithm, out int keyCalg, out int keyHashCalg)
+            {
+                switch (hmacAlgorithm) {
+                    case GostConstants.CALG_GR3411_2012_256_HMAC:
+                    case GostConstants.CALG_GR3411_HMAC:
+                        keyHashCalg = GostConstants.CALG_GR3411;
+                        keyCalg = GostConstants.CALG_G28147;
+                        break;
+                    case GostConstants.CALG_GR3411_2012_512_HMAC:
+                        keyHashCalg = GostConstants.CALG_GR3411_2012_512;
+                        keyCalg = GostConstants.CALG_SYMMETRIC_512;
+                        break;
+                    case GostConstants.CALG_MD5:
+                    case GostConstants.CALG_SHA1:
+                    case GostConstants.CALG_SHA256:
+                    case GostConstants.CALG_SHA384:
+                    case GostConstants.CALG_SHA512:
+                        keyCalg = GostConstants.CALG_GENERIC_SECRET;
+                        keyHashCalg = GostConstants.CALG_SHA512;
+                        break;
+                    default:
+                        throw new PlatformNotSupportedException(
+                        SR.Format(
+                            SR.Cryptography_UnknownHashAlgorithm, -1, hmacAlgorithm));
+                }
+            }
+
             private void SetKey()
             {
-
                 SafeProvHandle hProv;
                 if (!Interop.Advapi32.CryptAcquireContext(out hProv, null, null, _providerType, (uint)Interop.Advapi32.CryptAcquireContextFlags.CRYPT_VERIFYCONTEXT))
                 {
                     int hr = Marshal.GetHRForLastWin32Error();
                     throw new CryptographicException(hr);
                 }
+                int keyHashCalg;
+                int keyCalg;
+                GetCalgsFromHMAC(_calgHash, out keyCalg, out keyHashCalg);
+
                 SafeHashHandle hTmpHash;
-                int keyHashCalg = GostConstants.CALG_GR3411;
-                int keyCalg = GostConstants.CALG_G28147;
-                if (_calgHash == GostConstants.CALG_GR3411_2012_512_HMAC )
-                {
-                    keyHashCalg = GostConstants.CALG_GR3411_2012_512;
-                    keyCalg = GostConstants.CALG_SYMMETRIC_512;
-                }
                 if (!Interop.Advapi32.CryptCreateHash(hProv, keyHashCalg, SafeKeyHandle.InvalidHandle, Interop.Advapi32.CryptCreateHashFlags.None, out hTmpHash))
                 {
                     int hr = Marshal.GetHRForLastWin32Error();
@@ -101,17 +124,32 @@ namespace Internal.Cryptography
                     throw new CryptographicException(hr);
                 }
                 SafeKeyHandle hMacKey;
-                if (!Interop.Advapi32.CryptDeriveKey(hProv, keyCalg, hTmpHash, 0, out hMacKey))
+                if (!Interop.Advapi32.CryptDeriveKey(hProv, keyCalg, hTmpHash, ((_key.Length > 64 ? 64 : _key.Length ) << 19), out hMacKey))
                 {
                     int hr = Marshal.GetHRForLastWin32Error();
                     throw new CryptographicException(hr);
                 }
                 //Create Hash with imported Key
                 SafeHashHandle hMacHash;
-                if (!Interop.Advapi32.CryptCreateHash(hProv, _calgHash, hMacKey, Interop.Advapi32.CryptCreateHashFlags.None, out hMacHash))
-                {
-                    int hr = Marshal.GetHRForLastWin32Error();
-                    throw new CryptographicException(hr);
+                if (keyCalg == GostConstants.CALG_GENERIC_SECRET) {
+                    if (!Interop.Advapi32.CryptCreateHash(hProv, GostConstants.CALG_HMAC, hMacKey, Interop.Advapi32.CryptCreateHashFlags.None, out hMacHash))
+                    {
+                        int hr = Marshal.GetHRForLastWin32Error();
+                        throw new CryptographicException(hr);
+                    }
+                    Interop.Advapi32.HMAC_INFO hmacInfo = new Interop.Advapi32.HMAC_INFO();
+                    hmacInfo.HashAlgid = _calgHash;
+                    if (!Interop.Advapi32.CryptSetHashParam(hMacHash, Interop.Advapi32.CryptHashProperty.HP_HMAC_INFO, hmacInfo.ToByteArray(), 0))
+                    {
+                        int hr = Marshal.GetHRForLastWin32Error();
+                        throw new CryptographicException(hr);
+                    }
+                } else {
+                    if (!Interop.Advapi32.CryptCreateHash(hProv, _calgHash, hMacKey, Interop.Advapi32.CryptCreateHashFlags.None, out hMacHash))
+                    {
+                        int hr = Marshal.GetHRForLastWin32Error();
+                        throw new CryptographicException(hr);
+                    }
                 }
                 _hProv = hProv;
                 _hKey = hMacKey;

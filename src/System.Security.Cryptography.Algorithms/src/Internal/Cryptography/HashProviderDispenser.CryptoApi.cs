@@ -34,15 +34,15 @@ namespace Internal.Cryptography
             switch (hashAlgorithmId)
             {
                 case HashAlgorithmNames.MD5:
-                    return new CryptoApiHashProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_MD5);
+                    return new CryptoApiHashProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_MD5);
                 case HashAlgorithmNames.SHA1:
-                    return new CryptoApiHashProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_SHA1);
+                    return new CryptoApiHashProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_SHA1);
                 case HashAlgorithmNames.SHA256:
-                    return new CryptoApiHashProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_SHA256);
+                    return new CryptoApiHashProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_SHA256);
                 case HashAlgorithmNames.SHA384:
-                    return new CryptoApiHashProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_SHA384);
+                    return new CryptoApiHashProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_SHA384);
                 case HashAlgorithmNames.SHA512:
-                    return new CryptoApiHashProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_SHA512);
+                    return new CryptoApiHashProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_SHA512);
                 case HashAlgorithmNames.GOST3411:
                     return new CryptoApiHashProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_GR3411);
                 case HashAlgorithmNames.GOST3411_2012_256:
@@ -59,15 +59,15 @@ namespace Internal.Cryptography
             switch (hashAlgorithmId)
             {
                 case HashAlgorithmNames.MD5:
-                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_MD5, key);
+                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_MD5, key);
                 case HashAlgorithmNames.SHA1:
-                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_SHA1, key);
+                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_SHA1, key);
                 case HashAlgorithmNames.SHA256:
-                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_SHA256, key);
+                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_SHA256, key);
                 case HashAlgorithmNames.SHA384:
-                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_SHA384, key);
+                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_SHA384, key);
                 case HashAlgorithmNames.SHA512:
-                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_SHA512, key);
+                    return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2012_256, GostConstants.CALG_SHA512, key);
                 case HashAlgorithmNames.GOST3411:
                     return new CryptoApiHmacProvider(GostConstants.PROV_GOST_2001_DH, GostConstants.CALG_GR3411_HMAC, key);
                 case HashAlgorithmNames.GOST3411_2012_256:

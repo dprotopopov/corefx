@@ -140,8 +140,18 @@
     <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\Interop.CryptDeriveKey.cs">
       <Link>Common\Interop\Windows\Advapi32\Interop.CryptDeriveKey.cs</Link>
     </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\Interop.CryptEncrypt.cs">
+      <Link>Common\Interop\Windows\Advapi32\Interop.CryptEncrypt.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\Interop.CryptGenKey.cs">
+      <Link>Common\Interop\Windows\Advapi32\Interop.CryptGenKey.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\Interop.CryptImportKey.cs">
+      <Link>Common\Interop\Windows\Advapi32\Interop.CryptimportKey.cs</Link>
+    </Compile>
     <Compile Include="Internal\Cryptography\HashProviderDispenser.CryptoApi.cs" />
     <Compile Include="Internal\Cryptography\CryptoApiHashProvider.cs" />
+    <Compile Include="Internal\Cryptography\CryptoApiHMACProvider.cs" />
     <Compile Include="$(CommonPath)\Internal\Cryptography\BasicSymmetricCipher.cs">
       <Link>Internal\Cryptography\BasicSymmetricCipher.cs</Link>
     </Compile>

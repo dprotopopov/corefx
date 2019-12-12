@@ -124,12 +124,15 @@
         internal const int CALG_G28147 = 0x661e;
         internal const int CALG_G28147_IMIT = 0x801f;
         internal const int CALG_SYMMETRIC_512 = 0x6622;
+        internal const int CALG_GENERIC_SECRET = 0x6615;
+        internal const int CALG_AES_128 = 0x660e;
         internal const int CALG_SIMPLE_EXPORT = 0x6620;
         internal const int CALG_PRO_EXPORT = 0x661f;
         internal const int CALG_PRO12_EXPORT = 0x6621;
         internal const int CALG_GR3411_HMAC = 0x8027;
         internal const int CALG_GR3411_2012_256_HMAC = 0x8034;
         internal const int CALG_GR3411_2012_512_HMAC = 0x8035;
+        internal const int CALG_HMAC = 0x8009;
 
         // CryptGetProvParam/CryptSetProvParam dwParam
         internal const int PP_CLIENT_HWND = 1;

@@ -38,7 +38,7 @@ namespace System.Security.Cryptography.Pkcs
         protected abstract bool VerifyKeyType(AsymmetricAlgorithm key);
 
         internal abstract bool VerifySignature(
-#if netcoreapp || netstandard21
+#if netcoreapp || netcoreapp30 || netstandard21
             ReadOnlySpan<byte> valueHash,
             ReadOnlyMemory<byte> signature,
 #else
@@ -51,7 +51,7 @@ namespace System.Security.Cryptography.Pkcs
             X509Certificate2 certificate);
 
         protected abstract bool Sign(
-#if netcoreapp || netstandard21
+#if netcoreapp || netcoreapp30 || netstandard21
             ReadOnlySpan<byte> dataHash,
 #else
             byte[] dataHash,
@@ -79,7 +79,7 @@ namespace System.Security.Cryptography.Pkcs
         }
 
         internal static bool Sign(
-#if netcoreapp || netstandard21
+#if netcoreapp || netcoreapp30 || netstandard21
             ReadOnlySpan<byte> dataHash,
 #else
             byte[] dataHash,
@@ -176,7 +176,7 @@ namespace System.Security.Cryptography.Pkcs
             {
                 writer.PushSequence();
 
-#if netcoreapp || netstandard21
+#if netcoreapp || netcoreapp30 || netstandard21
                 // r
                 BigInteger val = new BigInteger(
                     ieeeSignature.Slice(0, fieldSize),

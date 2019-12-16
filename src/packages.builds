@@ -5,7 +5,11 @@
     <AdditionalBuildConfigurations>$(AdditionalBuildConfigurations);package-$(ConfigurationGroup)</AdditionalBuildConfigurations>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(SkipManagedPackageBuild)' != 'true'">
+  <PropertyGroup>
+    <BuildAllPackages>false</BuildAllPackages>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(BuildAllPackages)' == 'true'">
     <Project Include="$(MSBuildThisFileDirectory)..\pkg\*\*.builds" >
       <AdditionalProperties>$(AdditionalProperties)</AdditionalProperties>
     </Project>
@@ -14,8 +18,19 @@
     </Project>
   </ItemGroup>
 
-  <!-- Need the PackageIndexFile file property from baseline.props -->
-  <Import Project="../pkg/baseline/baseline.props" />
+  <ItemGroup Condition="'$(BuildAllPackages)' == 'false' AND '$(SkipManagedPackageBuild)' != 'true'" >
+    <Project Include="$(MSBuildThisFileDirectory)..\pkg\Microsoft.Private.PackageBaseline\Microsoft.Private.PackageBaseline.builds">
+      <AdditionalProperties>$(AdditionalProperties)</AdditionalProperties>
+    </Project>
+    <Project Include="$(MSBuildThisFileDirectory)..\pkg\Microsoft.Private.CoreFx.NETCoreApp\Microsoft.Private.CoreFx.NETCoreApp.builds">
+      <AdditionalProperties>$(AdditionalProperties)</AdditionalProperties>
+    </Project>
+    <!-- add specific builds / pkgproj's here to include in servicing builds -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <BuildingPackageProjects Include="@(Project->'%(FileName)')" />
+  </ItemGroup>
 
   <UsingTask TaskName="UpdatePackageIndex" AssemblyFile="$(PackagingTaskDir)Microsoft.DotNet.Build.Tasks.Packaging.dll"/>
 
@@ -36,11 +51,20 @@
       -->
       <PkgProjects Include="$(MSBuildThisFileDirectory)..\pkg\*\*.pkgproj" Exclude="$(MSBuildThisFileDirectory)..\pkg\*Private*\*.pkgproj" />
       <PkgProjects Include="*\pkg\**\*.pkgproj" />
+
     </ItemGroup>
 
-    <MSBuild Targets="GetPackageIdentityIfStable"
+    <ItemGroup>
+      <PkgProjectsToFileName Include="@(PkgProjects->'%(FileName)')" >
+        <OriginalIdentity>%(Identity)</OriginalIdentity>
+      </PkgProjectsToFileName>
+      <BuildingPkgProjectsFileNames Include="@(PkgProjectsToFileName)" Condition="'@(PkgProjectsToFileName)' == '@(BuildingPackageProjects)' and '%(Identity)' != ''" />
+      <BuildingPkgProjectsIdentities Include="@(BuildingPkgProjectsFileNames->'%(OriginalIdentity)')" />
+    </ItemGroup>
+
+    <MSBuild Targets="GetPackageIdentityWithoutPrerelease"
              BuildInParallel="$(BuildInParallel)"
-             Projects="@(PkgProjects)"
+             Projects="@(BuildingPkgProjectsIdentities)"
              RemoveProperties="Configuration">
       <Output TaskParameter="TargetOutputs"
               ItemName="_StablePackages" />
@@ -50,7 +74,8 @@
 
     <UpdatePackageIndex
       PackageIndexFile="$(PackageIndexFile)"
-      StablePackages="@(_StablePackages)" />
+      StablePackages="@(_StablePackages)"
+      Condition="'%(_StablePackages.BlockStable)' != 'true'" />
 
   </Target>
 

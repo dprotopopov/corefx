@@ -38,7 +38,7 @@ namespace System.Security.Cryptography.Xml
     internal static class UnescapedGtWriter
     {
         private static readonly Regex gtPattern = new Regex(@"(&gt;|&#62;)");
-        private static readonly XmlWriterSettings settings = new XmlWriterSettings() { ConformanceLevel = ConformanceLevel.Fragment };
+        private static readonly XmlWriterSettings settings = new XmlWriterSettings() { ConformanceLevel = ConformanceLevel.Fragment, Encoding = new UTF8Encoding(false), NewLineHandling = NewLineHandling.None };
 
         public static void WriteString(XmlWriter writer, string value, bool escapeGt, bool isAttribute)
         {

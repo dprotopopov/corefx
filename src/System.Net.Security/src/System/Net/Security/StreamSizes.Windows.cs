@@ -8,9 +8,9 @@ namespace System.Net
     {
         public StreamSizes(SecPkgContext_StreamSizes interopStreamSizes)
         {
-            Header = interopStreamSizes.cbHeader;
-            Trailer = interopStreamSizes.cbTrailer;
-            MaximumMessage = interopStreamSizes.cbMaximumMessage;
+            Header = (int)interopStreamSizes.cbHeader;
+            Trailer = (int)interopStreamSizes.cbTrailer;
+            MaximumMessage = (int)interopStreamSizes.cbMaximumMessage;
         }
     }
 }

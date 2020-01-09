@@ -11,5 +11,6 @@ internal static partial class Interop
         internal const string Crypt32 = "libcapi20";
         internal const string Kernel32 = "librdrsup";
         internal const string CPalloc = "libcpalloc";
+        internal const string SspiCli = "libssp";
     }
 }

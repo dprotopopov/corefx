@@ -273,7 +273,7 @@ namespace System.Net
                     for (int i = 0; i < input.Length; i++)
                     {
                         ref SecurityBuffer iBuffer = ref input[i];
-                        iBuffer.size = unmanagedBuffer[i].cbBuffer;
+                        iBuffer.size = (int)unmanagedBuffer[i].cbBuffer;
                         iBuffer.type = unmanagedBuffer[i].BufferType;
 
                         if (iBuffer.size == 0)

@@ -6,13 +6,15 @@ using System.Runtime.InteropServices;
 
 namespace System.Net
 {
-    // sspi.h
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SecPkgContext_Sizes
+    internal struct SecurityPackageInfo
     {
-        public readonly long cbMaxToken;
-        public readonly long cbMaxSignature;
-        public readonly long cbBlockSize;
-        public readonly long cbSecurityTrailer;
+        // see SecPkgInfoW in <sspi.h>
+        internal long Capabilities;
+        internal short Version;
+        internal short RPCID;
+        internal long MaxToken;
+        internal IntPtr Name;
+        internal IntPtr Comment;
     }
 }

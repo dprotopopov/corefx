@@ -50,7 +50,7 @@ namespace Microsoft.Win32.SafeHandles
             }
             else
             {
-                bool success = Interop.Crypt32.CryptReleaseContext(handle, 0);
+                bool success = Interop.Advapi32.CryptReleaseContext(handle, 0);
                 return success;
             }
         }

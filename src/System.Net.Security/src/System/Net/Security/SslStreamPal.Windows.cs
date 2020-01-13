@@ -14,9 +14,9 @@ using Microsoft.Win32.SafeHandles;
 
 namespace System.Net.Security
 {
-    internal static class SslStreamPal
+    internal static partial class SslStreamPal
     {
-        private const string SecurityPackage = "Microsoft Unified Security Protocol Provider";
+        // private const string SecurityPackage = "Microsoft Unified Security Protocol Provider";
 
         private const Interop.SspiCli.ContextFlags RequiredFlags =
             Interop.SspiCli.ContextFlags.ReplayDetect |
@@ -255,7 +255,7 @@ namespace System.Net.Security
                 Debug.Assert(headerSecBuffer->cbBuffer >= 0 && dataSecBuffer->cbBuffer >= 0 && trailerSecBuffer->cbBuffer >= 0);
                 Debug.Assert(checked(headerSecBuffer->cbBuffer + dataSecBuffer->cbBuffer + trailerSecBuffer->cbBuffer) <= output.Length);
 
-                resultSize = checked(headerSecBuffer->cbBuffer + dataSecBuffer->cbBuffer + trailerSecBuffer->cbBuffer);
+                resultSize = (int)checked(headerSecBuffer->cbBuffer + dataSecBuffer->cbBuffer + trailerSecBuffer->cbBuffer);
                 return new SecurityStatusPal(SecurityStatusPalErrorCode.OK);
             }
         }
@@ -294,7 +294,7 @@ namespace System.Net.Security
                         || (errorCode != Interop.SECURITY_STATUS.OK && unmanagedBuffer[i].BufferType == SecurityBufferType.SECBUFFER_EXTRA))
                     {
                         offset = (int)((byte*)unmanagedBuffer[i].pvBuffer - bufferPtr);
-                        count = unmanagedBuffer[i].cbBuffer;
+                        count = (int)unmanagedBuffer[i].cbBuffer;
 
                         Debug.Assert(offset >= 0 && count >= 0, $"Expected offset and count greater than 0, got {offset} and {count}");
                         Debug.Assert(checked(offset + count) <= buffer.Length, $"Expected offset+count <= buffer.Length, got {offset}+{count}>={buffer.Length}");

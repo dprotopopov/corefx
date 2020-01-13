@@ -433,7 +433,7 @@ namespace System.Net.Security
             SafeFreeContextBuffer outFreeContextBuffer = null;
             try
             {
-                Span<Interop.SspiCli.SecBuffer> inUnmanagedBuffer = stackalloc Interop.SspiCli.SecBuffer[inSecurityBufferDescriptor.cBuffers];
+                Span<Interop.SspiCli.SecBuffer> inUnmanagedBuffer = stackalloc Interop.SspiCli.SecBuffer[Convert.ToInt32(inSecurityBufferDescriptor.cBuffers)];
                 inUnmanagedBuffer.Clear();
 
                 fixed (void* inUnmanagedBufferPtr = inUnmanagedBuffer)
@@ -512,10 +512,10 @@ namespace System.Net.Security
                         if (NetEventSource.IsEnabled) NetEventSource.Info(null, "Marshalling OUT buffer");
 
                         // Get unmanaged buffer with index 0 as the only one passed into PInvoke.
-                        outSecBuffer.size = outUnmanagedBuffer.cbBuffer;
+                        outSecBuffer.size = (int)outUnmanagedBuffer.cbBuffer;
                         outSecBuffer.type = outUnmanagedBuffer.BufferType;
                         outSecBuffer.token = outSecBuffer.size > 0 ?
-                            new Span<byte>((byte*)outUnmanagedBuffer.pvBuffer, outUnmanagedBuffer.cbBuffer).ToArray() :
+                            new Span<byte>((byte*)outUnmanagedBuffer.pvBuffer, (int)outUnmanagedBuffer.cbBuffer).ToArray() :
                             null;
                     }
                 }
@@ -663,7 +663,7 @@ namespace System.Net.Security
             SafeFreeContextBuffer outFreeContextBuffer = null;
             try
             {
-                Span<Interop.SspiCli.SecBuffer> inUnmanagedBuffer = stackalloc Interop.SspiCli.SecBuffer[inSecurityBufferDescriptor.cBuffers];
+                Span<Interop.SspiCli.SecBuffer> inUnmanagedBuffer = stackalloc Interop.SspiCli.SecBuffer[Convert.ToInt32(inSecurityBufferDescriptor.cBuffers)];
                 inUnmanagedBuffer.Clear();
 
                 fixed (void* inUnmanagedBufferPtr = inUnmanagedBuffer)
@@ -734,10 +734,10 @@ namespace System.Net.Security
                         if (NetEventSource.IsEnabled) NetEventSource.Info(null, "Marshaling OUT buffer");
 
                         // Get unmanaged buffer with index 0 as the only one passed into PInvoke.
-                        outSecBuffer.size = outUnmanagedBuffer.cbBuffer;
+                        outSecBuffer.size = (int)outUnmanagedBuffer.cbBuffer;
                         outSecBuffer.type = outUnmanagedBuffer.BufferType;
                         outSecBuffer.token = outUnmanagedBuffer.cbBuffer > 0 ?
-                            new Span<byte>((byte*)outUnmanagedBuffer.pvBuffer, outUnmanagedBuffer.cbBuffer).ToArray() :
+                            new Span<byte>((byte*)outUnmanagedBuffer.pvBuffer, (int)outUnmanagedBuffer.cbBuffer).ToArray() :
                             null;
                     }
                 }

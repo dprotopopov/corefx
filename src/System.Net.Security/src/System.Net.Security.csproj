@@ -113,14 +113,14 @@
     </Compile>
     <None Include="System\Net\Security\TlsCipherSuiteNameParser.ttinclude" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetsUnix)' == 'true' ">
+<!--   <ItemGroup Condition=" '$(TargetsUnix)' == 'true' ">
     <Compile Include="System\Net\Security\TlsCipherSuiteData.Lookup.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>TlsCipherSuiteData.Lookup.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetsUnix)' != 'true' ">
+  </ItemGroup> -->
+  <ItemGroup>
     <None Include="System\Net\Security\TlsCipherSuiteData.Lookup.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -142,7 +142,26 @@
     <None Include="System\Net\Security\TlsCipherSuiteData.Lookup.tt" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetsWindows)' == 'true'">
+    <Compile Include="System\Net\Security\SslStreamPal.SecurityPackagename.Windows.cs" />
     <Compile Include="System\Net\CertificateValidationPal.Windows.cs" />
+    <Compile Include="$(CommonPath)\Interop\Windows\Interop.Libraries.cs">
+      <Link>Common\Interop\Windows\Interop.Libraries.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecurityPackageInfo.cs">
+      <Link>Common\Interop\Windows\SspiCli\SecurityPackageInfo.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\Interop.SSPI.cs">
+      <Link>Common\Interop\Windows\SspiCli\Interop.SSPI.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecurityPackageInfoClass.cs">
+      <Link>Common\Interop\Windows\SspiCli\SecurityPackageInfoClass.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\SChannel\SecPkgContext_CipherInfo.cs">
+      <Link>Common\Interop\Windows\SChannel\SecPkgContext_CipherInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+  <!-- <ItemGroup Condition=" '$(TargetsWindows)' == 'true'"> -->
     <Compile Include="System\Net\Security\CipherSuitesPolicyPal.Windows.cs" />
     <Compile Include="System\Net\Security\NegotiateStreamPal.Windows.cs" />
     <Compile Include="System\Net\Security\NetEventSource.Security.Windows.cs" />
@@ -169,9 +188,6 @@
       <Link>Common\System\Net\Security\SecurityContextTokenHandle.cs</Link>
     </Compile>
     <!-- Interop -->
-    <Compile Include="$(CommonPath)\Interop\Windows\Interop.Libraries.cs">
-      <Link>Common\Interop\Windows\Interop.Libraries.cs</Link>
-    </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\Crypt32\Interop.certificates.cs">
       <Link>Common\Interop\Windows\Crypt32\Interop.certificates.cs</Link>
     </Compile>
@@ -196,9 +212,6 @@
     <Compile Include="$(CommonPath)\Interop\Windows\SChannel\SecPkgContext_ConnectionInfo.cs">
       <Link>Common\Interop\Windows\SChannel\SecPkgContext_ConnectionInfo.cs</Link>
     </Compile>
-    <Compile Include="$(CommonPath)\Interop\Windows\SChannel\SecPkgContext_CipherInfo.cs">
-      <Link>Common\Interop\Windows\SChannel\SecPkgContext_CipherInfo.cs</Link>
-    </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\SChannel\Interop.SecPkgContext_ApplicationProtocol.cs">
       <Link>Common\Interop\Windows\SChannel\Interop.SecPkgContext_ApplicationProtocol.cs</Link>
     </Compile>
@@ -217,9 +230,6 @@
     <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\GlobalSSPI.cs">
       <Link>Common\Interop\Windows\SspiCli\GlobalSSPI.cs</Link>
     </Compile>
-    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\Interop.SSPI.cs">
-      <Link>Common\Interop\Windows\SspiCli\Interop.SSPI.cs</Link>
-    </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecPkgContext_NegotiationInfoW.cs">
       <Link>Common\Interop\Windows\SspiCli\SecPkgContext_NegotiationInfoW.cs</Link>
     </Compile>
@@ -234,12 +244,6 @@
     </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SafeDeleteContext.cs">
       <Link>Common\Interop\Windows\SspiCli\SafeDeleteContext.cs</Link>
-    </Compile>
-    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecurityPackageInfo.cs">
-      <Link>Common\Interop\Windows\SspiCli\SecurityPackageInfo.cs</Link>
-    </Compile>
-    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecurityPackageInfoClass.cs">
-      <Link>Common\Interop\Windows\SspiCli\SecurityPackageInfoClass.cs</Link>
     </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecuritySafeHandles.cs">
       <Link>Common\Interop\Windows\SspiCli\SecuritySafeHandles.cs</Link>
@@ -261,10 +265,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetsUnix)' == 'true' ">
+    <Compile Include="System\Net\CertificateValidationPal.cpcsp.cs" />
+    <Compile Include="System\Net\Security\SslStreamPal.SecurityPackageName.cpcsp.cs" />
+    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecurityPackageInfoClass.Unix.cs">
+      <Link>Common\Interop\Windows\SspiCli\SecurityPackageInfoClass.Unix.cs</Link>
+    </Compile>
     <Compile Include="$(CommonPath)\Interop\Unix\Interop.Libraries.cs">
       <Link>Common\Interop\Unix\Interop.Libraries.cs</Link>
     </Compile>
-    <Compile Include="$(CommonPath)\CoreLib\Interop\Unix\Interop.Errors.cs">
+    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecurityPackageInfo.cpcsp.cs">
+      <Link>Common\Interop\Windows\SspiCli\SecurityPackageInfo.cpcsp.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\Interop.SSPI.cpcsp.cs">
+      <Link>Common\Interop\Windows\SspiCli\Interop.SSPI.cpcsp.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\SChannel\SecPkgContext_CipherInfo.cpcsp.cs">
+      <Link>Common\Interop\Windows\SChannel\SecPkgContext_CipherInfo.cpcsp.cs</Link>
+    </Compile>
+<!--     <Compile Include="$(CommonPath)\CoreLib\Interop\Unix\Interop.Errors.cs">
       <Link>Common\CoreLib\Interop\Unix\Interop.Errors.cs</Link>
     </Compile>
     <Compile Include="$(CommonPath)\Interop\Unix\System.Native\Interop.PrintF.cs">
@@ -316,10 +334,13 @@
     <Compile Include="System\Net\Security\Pal.Managed\EndpointChannelBindingToken.cs" />
     <Compile Include="System\Net\Security\Pal.Managed\SafeChannelBindingHandle.cs" />
     <Compile Include="System\Net\Security\SslConnectionInfo.Unix.cs" />
-    <Compile Include="System\Net\Security\TlsCipherSuiteData.cs" />
+    <Compile Include="System\Net\Security\TlsCipherSuiteData.cs" /> -->
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetsUnix)' == 'true' AND '$(TargetsOSX)' != 'true' ">
-    <Compile Include="System\Net\CertificateValidationPal.Unix.cs" />
+    <Compile Include="$(CommonPath)\Interop\Unix\Interop.Libraries.Capi.cs">
+      <Link>Common\Interop\Unix\Interop.Libraries.Capi.cs</Link>
+    </Compile>
+<!--     <Compile Include="System\Net\CertificateValidationPal.Unix.cs" />
     <Compile Include="System\Net\Security\CipherSuitesPolicyPal.Linux.cs" />
     <Compile Include="System\Net\Security\SslStreamPal.Unix.cs" />
     <Compile Include="System\Net\Security\SslConnectionInfo.Linux.cs" />
@@ -395,10 +416,13 @@
     </Compile>
     <Compile Include="$(CommonPath)\System\Net\Security\Unix\SafeFreeSslCredentials.cs">
       <Link>Common\System\Net\Security\Unix\SafeFreeSslCredentials.cs</Link>
-    </Compile>
+    </Compile> -->
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetsOSX)' == 'true' ">
-    <Compile Include="$(CommonPath)\Interop\OSX\Interop.CoreFoundation.cs">
+    <Compile Include="$(CommonPath)\Interop\OSX\Interop.Libraries.cs">
+      <Link>Common\Interop\OSX\Interop.Libraries.cs</Link>
+    </Compile>
+<!--     <Compile Include="$(CommonPath)\Interop\OSX\Interop.CoreFoundation.cs">
       <Link>Common\Interop\OSX\Interop.CoreFoundation.cs</Link>
     </Compile>
     <Compile Include="$(CommonPath)\Interop\OSX\Interop.CoreFoundation.CFArray.cs">
@@ -415,9 +439,6 @@
     </Compile>
     <Compile Include="$(CommonPath)\Interop\OSX\Interop.CoreFoundation.CFString.cs">
       <Link>Common\Interop\OSX\Interop.CoreFoundation.CFString.cs</Link>
-    </Compile>
-    <Compile Include="$(CommonPath)\Interop\OSX\Interop.Libraries.cs">
-      <Link>Common\Interop\OSX\Interop.Libraries.cs</Link>
     </Compile>
     <Compile Include="$(CommonPath)\Interop\OSX\System.Security.Cryptography.Native.Apple\Interop.SecErrMessage.cs">
       <Link>Common\Interop\OSX\System.Security.Cryptography.Native.Apple\Interop.SecErrMessage.cs</Link>
@@ -440,7 +461,7 @@
     <Compile Include="System\Net\Security\SslConnectionInfo.OSX.cs" />
     <Compile Include="System\Net\Security\SslStreamPal.OSX.cs" />
     <Compile Include="System\Net\Security\StreamSizes.OSX.cs" />
-    <Compile Include="System\Net\Security\CipherSuitesPolicyPal.OSX.cs" />
+    <Compile Include="System\Net\Security\CipherSuitesPolicyPal.OSX.cs" /> -->
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Win32.Primitives" />

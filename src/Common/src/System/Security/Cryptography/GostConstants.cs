@@ -87,6 +87,26 @@
         internal const string XmlKeyExchangeAlgorithmTransport2012_512 =
             "urn:ietf:params:xml:ns:cpxmlsec:algorithms:transport-gost2012-512";
 
+        /// <summary>
+        /// Алгоримтм шифрования ГОСТ 28147
+        /// </summary>
+        internal const string XmlEncGost28147Url = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:gost28147";
+
+        /// <summary>
+        /// Алгоритм экспорта КриптоПро
+        /// </summary>
+        internal const string XmlEncGostCryptoProKeyWrapUrl = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:kw-cp";
+
+        /// <summary>
+        /// Алгоритм экпорта КриптоПро 12
+        /// </summary>
+        internal const string XmlEncGostCryptoPro12KeyWrapUrl = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:kw-cp12";
+
+        /// <summary>
+        /// Алгоритм экспорта ГОСТ
+        /// </summary>
+        internal const string XmlEncGost28147KeyWrapUrl = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:kw-gost";
+
         // Error codes
         internal const int NTE_BAD_HASH = -2146893822; // 0x80090002L;
         internal const int NTE_BAD_DATA = -2146893819; // 0x80090005

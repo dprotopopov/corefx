@@ -29,6 +29,8 @@
     <Compile Include="System\Security\Cryptography\AsymmetricSignatureFormatter.cs" />
     <Compile Include="System\Security\Cryptography\CryptoConfig.cs" />
     <Compile Include="System\Security\Cryptography\DeriveBytes.cs" />
+    <Compile Include="System\Security\Cryptography\GostKeyExchangeFormatter.cs" />
+    <Compile Include="System\Security\Cryptography\GostKeyTransport.cs" />
     <Compile Include="System\Security\Cryptography\GostSignatureFormatter.cs" />
     <Compile Include="System\Security\Cryptography\GostSignatureDeformatter.cs" />
     <Compile Include="System\Security\Cryptography\Gost2012_512SignatureDeformatter.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="System\Security\Cryptography\RSASignaturePaddingMode.cs" />
     <Compile Include="System\Security\Cryptography\SignatureDescription.cs" />
     <Compile Include="System\Security\Cryptography\TripleDES.cs" />
+    <Compile Include="System\Security\Cryptography\WrappedKey.cs" />
     <Compile Include="System\Security\Cryptography\XmlKeyHelper.cs" />
     <Compile Include="System\Security\Cryptography\Gost3410.cs" />
     <Compile Include="System\Security\Cryptography\Gost3410_2012_256.cs" />

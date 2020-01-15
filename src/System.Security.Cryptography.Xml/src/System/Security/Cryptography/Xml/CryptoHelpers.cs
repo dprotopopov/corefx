@@ -66,6 +66,10 @@ namespace System.Security.Cryptography.Xml
                     return new RSAPKCS1SHA384SignatureDescription();
                 case "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512":
                     return new RSAPKCS1SHA512SignatureDescription();
+                // begin: gost
+                case "urn://smev-gov-ru/xmldsig/transform":
+                    return new XmlDsigSmevTransform();
+                // end: gost
 
                 // workarounds for issue https://github.com/dotnet/corefx/issues/16563
                 // remove attribute from this method when removing them

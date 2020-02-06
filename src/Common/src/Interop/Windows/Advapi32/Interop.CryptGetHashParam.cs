@@ -73,8 +73,7 @@ internal partial class Interop
             //We use only HashAlgid, so all other fields can be set to zerro
             internal unsafe byte[] ToByteArray()
             {
-                int numBytes = 3*sizeof(int) + 2*sizeof(IntPtr);
-                byte[] data = new byte[numBytes];
+                byte[] data = new byte[sizeof(HMAC_INFO)];
                 BitConverter.GetBytes(HashAlgid).CopyTo(data, 0);
                 return data;
             }

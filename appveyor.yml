@@ -161,7 +161,7 @@ install:
 - sh: sudo sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
 
 build_script:
-  - cmd: build.sh
+  - sh: build.sh
 
 # artifacts on successful build 
 artifacts:

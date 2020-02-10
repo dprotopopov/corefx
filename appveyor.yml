@@ -126,8 +126,6 @@ for:
   #- ps: Get-ChildItem "artifacts\packages\**\symbols\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
 #Start of Linux specific build configuration
-for:
--
   matrix:
     only:
       - image: Ubuntu

@@ -31,7 +31,7 @@ on_finish:
   
 # runnng specified tests  
 test_script:
-  - $(DOTNETCMD) --info
+  - 'echo %DOTNETCMD%'
   - .dotnet\dotnet msbuild src\System.Security.Cryptography.Csp\tests\ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3411.Tests.Gost3411CryptoServiceProviderTests" /p:ForceRunTests=true
   - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.Gost3411Tests"  /p:ForceRunTests=true
   - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.Gost3411_2012_256Tests"  /p:ForceRunTests=true
@@ -73,8 +73,6 @@ for:
     DOTNETCMD: .dotnet\dotnet
   # install csp
   install:
-  - cmd: 'echo %DOTNETCMD% --info'
-  - cmd: '%DOTNETCMD% --info'
   - cmd: cspTools\CSPSetup.exe -silent -lang eng -noreboot -nodlg -args "PIDKEY=5050E-30030-06W59-AW5WP-D3G5M /quiet"
   - ps: Start-Sleep -s 160
   - cmd: regedit.exe /S cspTools\disableWarnings.reg
@@ -138,9 +136,9 @@ for:
   environment:
     DOTNETCMD: .dotnet/dotnet
   install:
-  - cmd: 'echo %DOTNETCMD% --info'
-  - cmd: '%DOTNETCMD% --info'
-  - sh: apt install lsb lsb-core alien
+  - 'echo %DOTNETCMD% --info'
+  - '%DOTNETCMD% --info'
+  - sh: sudo apt install lsb lsb-core alien
   - sh: cd ./cspTools
   - sh: tar -xf linux_amd64_deb.tar
   - sh: ./linux_amd64_deb/install.sh
@@ -160,8 +158,8 @@ for:
   - sh: mkdir -p ~/.nuget/packages/netstandard.library
   - sh: cp -r ./NetStandard.Library/nugetReady/netstandard.library ~/.nuget/packages/
  # disable warnings
-  - sh: sed -i '/[Parameters]/a warning_time_gen_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
-  - sh: sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
+  - sh: sudo sed -i '/[Parameters]/a warning_time_gen_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
+  - sh: sudo sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
   
   build_script:
     - cmd: build.sh

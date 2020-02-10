@@ -73,8 +73,8 @@ for:
     dotnet_cmd: .dotnet\dotnet
   # install csp
   install:
-    - cmd: $dotnet_cmd --info
     - cmd: ${dotnet_cmd} --info
+    - ps: $env:dotnet_cmd --info
     - cmd: cspTools\CSPSetup.exe -silent -lang eng -noreboot -nodlg -args "PIDKEY=5050E-30030-06W59-AW5WP-D3G5M /quiet"
     - ps: Start-Sleep -s 160
     - cmd: regedit.exe /S cspTools\disableWarnings.reg
@@ -138,8 +138,8 @@ for:
   environment:
     dotnet_cmd: .dotnet/dotnet
   install:
-    - cmd: $dotnet_cmd --info
     - cmd: ${dotnet_cmd} --info
+    - ps: $env:dotnet_cmd --info
     - cmd: apt install lsb lsb-core alien
     - cmd: cd ./cspTools
     - cmd: tar -xf linux_amd64_deb.tar

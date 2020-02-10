@@ -97,7 +97,7 @@ test_script:
 
   # # build script logic
   # build_script:
-  #   - build.cmd  
+  #   - build.cmd -c Release 
 
   # # artifacts on successful build 
   # artifacts:
@@ -137,7 +137,7 @@ environment:
   DOTNETCMD: .dotnet/dotnet
 install:
 - sh: sudo apt-get update
-- sh: sudo apt install -y lsb lsb-core alien
+- sh: sudo apt install -y lsb lsb-core alien libkrb5-dev
 - sh: cd ./cspTools
 - sh: tar -xf linux_amd64_deb.tar
 - sh: sudo ./linux_amd64_deb/install.sh
@@ -162,8 +162,7 @@ install:
 - sh: sudo sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
 
 build_script:
-  - sh: ls
-  - sh: ./build.sh
+  - sh: build.sh -c Release
 
 # artifacts on successful build 
 artifacts:

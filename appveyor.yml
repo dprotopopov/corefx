@@ -12,14 +12,6 @@ image:
   - Visual Studio 2017
   - Ubuntu
 
-environment:
- matrix:
- - image: Ubuntu
-   dotnet_cmd: .dotnet/dotnet
-
- - image: Visual Studio 2017
-   dotnet_cmd: .dotnet\dotnet
-
 # RDP user is DAIAD\appveyor
 # password in project settings
 # more rdp info https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
@@ -77,9 +69,12 @@ for:
   matrix:
     only:
       - image: Visual Studio 2017
+  environment:
+    dotnet_cmd: .dotnet\dotnet
   # install csp
   install:
     - cmd: $dotnet_cmd --info
+    - cmd: ${dotnet_cmd} --info
     - cmd: cspTools\CSPSetup.exe -silent -lang eng -noreboot -nodlg -args "PIDKEY=5050E-30030-06W59-AW5WP-D3G5M /quiet"
     - ps: Start-Sleep -s 160
     - cmd: regedit.exe /S cspTools\disableWarnings.reg
@@ -140,8 +135,11 @@ for:
   matrix:
     only:
       - image: Ubuntu
+  environment:
+    dotnet_cmd: .dotnet/dotnet
   install:
     - cmd: $dotnet_cmd --info
+    - cmd: ${dotnet_cmd} --info
     - cmd: apt install lsb lsb-core alien
     - cmd: cd ./cspTools
     - cmd: tar -xf linux_amd64_deb.tar

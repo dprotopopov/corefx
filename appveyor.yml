@@ -64,7 +64,7 @@ test_script:
  
 #Start of Windows specific configuration
 
-for:
+# for:
 #-
   # matrix:
   #   only:
@@ -129,10 +129,10 @@ for:
 
 
 #Start of Linux specific build configuration
--
-  matrix:
-    only:
-      - image: Ubuntu
+# -
+#   matrix:
+#     only:
+#       - image: Ubuntu
   environment:
     DOTNETCMD: .dotnet/dotnet
   install:

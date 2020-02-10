@@ -31,7 +31,6 @@ on_finish:
   
 # runnng specified tests  
 test_script:
-  - cmd: $dotnet_cmd --info
   - .dotnet\dotnet msbuild src\System.Security.Cryptography.Csp\tests\ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3411.Tests.Gost3411CryptoServiceProviderTests" /p:ForceRunTests=true
   - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.Gost3411Tests"  /p:ForceRunTests=true
   - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.Gost3411_2012_256Tests"  /p:ForceRunTests=true
@@ -70,11 +69,10 @@ for:
     only:
       - image: Visual Studio 2017
   environment:
-    dotnet_cmd: .dotnet\dotnet
+    DOTNET_CMD: .dotnet\dotnet
   # install csp
   install:
-    - cmd: ${dotnet_cmd} --info
-    - ps: $env:dotnet_cmd --info
+    - ps: $env:DOTNET_CMD --info
     - cmd: cspTools\CSPSetup.exe -silent -lang eng -noreboot -nodlg -args "PIDKEY=5050E-30030-06W59-AW5WP-D3G5M /quiet"
     - ps: Start-Sleep -s 160
     - cmd: regedit.exe /S cspTools\disableWarnings.reg
@@ -136,10 +134,9 @@ for:
     only:
       - image: Ubuntu
   environment:
-    dotnet_cmd: .dotnet/dotnet
+    DOTNET_CMD: .dotnet/dotnet
   install:
-    - cmd: ${dotnet_cmd} --info
-    - ps: $env:dotnet_cmd --info
+    - ps: $env:DOTNET_CMD --info
     - cmd: apt install lsb lsb-core alien
     - cmd: cd ./cspTools
     - cmd: tar -xf linux_amd64_deb.tar

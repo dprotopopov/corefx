@@ -136,6 +136,7 @@ for:
   environment:
     DOTNETCMD: .dotnet/dotnet
   install:
+  - sh: sudo apt-get update
   - sh: sudo apt install -y lsb lsb-core alien
   - sh: cd ./cspTools
   - sh: tar -xf linux_amd64_deb.tar

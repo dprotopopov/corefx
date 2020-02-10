@@ -73,28 +73,28 @@ for:
     DOTNET_CMD: .dotnet\dotnet
   # install csp
   install:
-    - $(DOTNET_CMD) --info
-    - cmd: cspTools\CSPSetup.exe -silent -lang eng -noreboot -nodlg -args "PIDKEY=5050E-30030-06W59-AW5WP-D3G5M /quiet"
-    - ps: Start-Sleep -s 160
-    - cmd: regedit.exe /S cspTools\disableWarnings.reg
-    - ps: Restart-Computer -Force
-    - ps: Start-Sleep -s 10
-    - ps: New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\Crypto Pro"
-    - ps: Copy-Item -Force -Recurse ".\cspTools\G2001256.000" -Destination "$env:LOCALAPPDATA\Crypto Pro\"
-    - ps: Copy-Item -Force -Recurse ".\cspTools\G2012256.001" -Destination "$env:LOCALAPPDATA\Crypto Pro\"
-    - ps: Copy-Item -Force -Recurse ".\cspTools\G2012512.000" -Destination "$env:LOCALAPPDATA\Crypto Pro\"
-    - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"'
-    - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -absorb -certs -provtype 80 -pattern "G2012256"'
-    - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -absorb -certs -provtype 81 -pattern "G2012512"'
-    - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -keyset -enum_c -verifyc -uniq'
-    - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -keyset -enum_c -verifyc -fqcn'
-    - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -enum -info -type PP_ENUMALGS'
-    # getting pached nuget packages with gost support
-    - cmd: git clone https://github.com/CryptoProLLC/NetStandard.Library
-    - ps: New-Item -ItemType Directory -Force -Path "$env:userprofile\.nuget\packages\netstandard.library"
-    - ps: Copy-Item -Force -Recurse ".\NetStandard.Library\nugetReady\netstandard.library" -Destination "$env:userprofile\.nuget\packages\"
-    # enable-rdp
-    - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - cmd: '%DOTNET_CMD% --info'
+  - cmd: cspTools\CSPSetup.exe -silent -lang eng -noreboot -nodlg -args "PIDKEY=5050E-30030-06W59-AW5WP-D3G5M /quiet"
+  - ps: Start-Sleep -s 160
+  - cmd: regedit.exe /S cspTools\disableWarnings.reg
+  - ps: Restart-Computer -Force
+  - ps: Start-Sleep -s 10
+  - ps: New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\Crypto Pro"
+  - ps: Copy-Item -Force -Recurse ".\cspTools\G2001256.000" -Destination "$env:LOCALAPPDATA\Crypto Pro\"
+  - ps: Copy-Item -Force -Recurse ".\cspTools\G2012256.001" -Destination "$env:LOCALAPPDATA\Crypto Pro\"
+  - ps: Copy-Item -Force -Recurse ".\cspTools\G2012512.000" -Destination "$env:LOCALAPPDATA\Crypto Pro\"
+  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"'
+  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -absorb -certs -provtype 80 -pattern "G2012256"'
+  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -absorb -certs -provtype 81 -pattern "G2012512"'
+  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -keyset -enum_c -verifyc -uniq'
+  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -keyset -enum_c -verifyc -fqcn'
+  - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -enum -info -type PP_ENUMALGS'
+  # getting pached nuget packages with gost support
+  - cmd: git clone https://github.com/CryptoProLLC/NetStandard.Library
+  - ps: New-Item -ItemType Directory -Force -Path "$env:userprofile\.nuget\packages\netstandard.library"
+  - ps: Copy-Item -Force -Recurse ".\NetStandard.Library\nugetReady\netstandard.library" -Destination "$env:userprofile\.nuget\packages\"
+  # enable-rdp
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
   # build script logic
   build_script:
@@ -137,29 +137,29 @@ for:
   environment:
     DOTNET_CMD: .dotnet/dotnet
   install:
-    - $(DOTNET_CMD) --info
-    - cmd: apt install lsb lsb-core alien
-    - cmd: cd ./cspTools
-    - cmd: tar -xf linux_amd64_deb.tar
-    - cmd: ./linux_amd64_deb/install.sh
-    - cmd: /opt/cprocsp/sbin/amd64/cpconfig -license -set "5050C-90030-05B5W-LTHVH-PFPU2"
-    #install container
-    - cmd: mkdir -p /var/opt/cprocsp/keys/travis/
-    - cmd: cp -r ./G2001256.000 /var/opt/cprocsp/keys/travis/
-    - cmd: cp -r ./G2012256.001 /var/opt/cprocsp/keys/travis/
-    - cmd: cp -r ./G2012512.000 /var/opt/cprocsp/keys/travis/
-    - cmd: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"
-    - cmd: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 80 -pattern "G2012256"
-    - cmd: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 81 -pattern "G2012512"
-    - cmd: /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -uniq
-    - cmd: /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -fqcn
-   # getting patched nuget packages with gost support
-    - cmd: git clone https://github.com/CryptoProLLC/NetStandard.Library
-    - cmd: mkdir -p ~/.nuget/packages/netstandard.library
-    - cmd: cp -r ./NetStandard.Library/nugetReady/netstandard.library ~/.nuget/packages/
-   # disable warnings
-    - cmd: sed -i '/[Parameters]/a warning_time_gen_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
-    - cmd: sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
+  - sh: $DOTNET_CMD% --info
+  - sh: apt install lsb lsb-core alien
+  - sh: cd ./cspTools
+  - sh: tar -xf linux_amd64_deb.tar
+  - sh: ./linux_amd64_deb/install.sh
+  - sh: /opt/cprocsp/sbin/amd64/cpconfig -license -set "5050C-90030-05B5W-LTHVH-PFPU2"
+  #install container
+  - sh: mkdir -p /var/opt/cprocsp/keys/travis/
+  - sh: cp -r ./G2001256.000 /var/opt/cprocsp/keys/travis/
+  - sh: cp -r ./G2012256.001 /var/opt/cprocsp/keys/travis/
+  - sh: cp -r ./G2012512.000 /var/opt/cprocsp/keys/travis/
+  - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"
+  - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 80 -pattern "G2012256"
+  - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 81 -pattern "G2012512"
+  - sh: /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -uniq
+  - sh: /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -fqcn
+ # getting patched nuget packages with gost support
+  - sh: git clone https://github.com/CryptoProLLC/NetStandard.Library
+  - sh: mkdir -p ~/.nuget/packages/netstandard.library
+  - sh: cp -r ./NetStandard.Library/nugetReady/netstandard.library ~/.nuget/packages/
+ # disable warnings
+  - sh: sed -i '/[Parameters]/a warning_time_gen_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
+  - sh: sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
   
   build_script:
     - cmd: build.sh

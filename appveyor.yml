@@ -133,41 +133,41 @@ test_script:
 #   matrix:
 #     only:
 #       - image: Ubuntu
-  environment:
-    DOTNETCMD: .dotnet/dotnet
-  install:
-  - sh: sudo apt-get update
-  - sh: sudo apt install -y lsb lsb-core alien
-  - sh: cd ./cspTools
-  - sh: tar -xf linux_amd64_deb.tar
-  - sh: sudo ./linux_amd64_deb/install.sh
-  - sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -license -set "5050C-90030-05B5W-LTHVH-PFPU2"
-  #install container
-  - sh: mkdir -p /var/opt/cprocsp/keys/travis/
-  - sh: cp -r ./G2001256.000 /var/opt/cprocsp/keys/travis/
-  - sh: cp -r ./G2012256.001 /var/opt/cprocsp/keys/travis/
-  - sh: cp -r ./G2012512.000 /var/opt/cprocsp/keys/travis/
-  - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"
-  - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 80 -pattern "G2012256"
-  - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 81 -pattern "G2012512"
-  - sh: /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -uniq
-  - sh: /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -fqcn
- # getting patched nuget packages with gost support
-  - sh: git clone https://github.com/CryptoProLLC/NetStandard.Library
-  - sh: mkdir -p ~/.nuget/packages/netstandard.library
-  - sh: cp -r ./NetStandard.Library/nugetReady/netstandard.library ~/.nuget/packages/
- # disable warnings
-  - sh: sudo sed -i '/[Parameters]/a warning_time_gen_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
-  - sh: sudo sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
-  
-  build_script:
-    - cmd: build.sh
+environment:
+  DOTNETCMD: .dotnet/dotnet
+install:
+- sh: sudo apt-get update
+- sh: sudo apt install -y lsb lsb-core alien
+- sh: cd ./cspTools
+- sh: tar -xf linux_amd64_deb.tar
+- sh: sudo ./linux_amd64_deb/install.sh
+- sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -license -set "5050C-90030-05B5W-LTHVH-PFPU2"
+#install container
+- sh: mkdir -p /var/opt/cprocsp/keys/travis/
+- sh: cp -r ./G2001256.000 /var/opt/cprocsp/keys/travis/
+- sh: cp -r ./G2012256.001 /var/opt/cprocsp/keys/travis/
+- sh: cp -r ./G2012512.000 /var/opt/cprocsp/keys/travis/
+- sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"
+- sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 80 -pattern "G2012256"
+- sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 81 -pattern "G2012512"
+- sh: /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -uniq
+- sh: /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -fqcn
+# getting patched nuget packages with gost support
+- sh: git clone https://github.com/CryptoProLLC/NetStandard.Library
+- sh: mkdir -p ~/.nuget/packages/netstandard.library
+- sh: cp -r ./NetStandard.Library/nugetReady/netstandard.library ~/.nuget/packages/
+# disable warnings
+- sh: sudo sed -i '/[Parameters]/a warning_time_gen_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
+- sh: sudo sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
 
-  # artifacts on successful build 
-  artifacts:
-    - path: artifacts\packages\**\*.nupkg
-      name: packages
-      type: zip
+build_script:
+  - cmd: build.sh
+
+# artifacts on successful build 
+artifacts:
+  - path: artifacts\packages\**\*.nupkg
+    name: packages
+    type: zip
     # - path: artifacts/packages
     #   name: packages
     #   type: zip

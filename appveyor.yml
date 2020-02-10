@@ -147,6 +147,7 @@ install:
 - sh: cp -r ./G2001256.000 /var/opt/cprocsp/keys/travis/
 - sh: cp -r ./G2012256.001 /var/opt/cprocsp/keys/travis/
 - sh: cp -r ./G2012512.000 /var/opt/cprocsp/keys/travis/
+- sh: cd ../
 - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"
 - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 80 -pattern "G2012256"
 - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 81 -pattern "G2012512"

@@ -70,7 +70,7 @@ for:
     only:
       - image: Visual Studio 2017
   environment:
-    DOTNET_CMD: .dotnet\dotnet
+    DOTNET_CMD: ".dotnet\dotnet"
   # install csp
   install:
   - cmd: '%DOTNET_CMD% --info'
@@ -137,7 +137,7 @@ for:
   environment:
     DOTNET_CMD: .dotnet/dotnet
   install:
-  - sh: $DOTNET_CMD% --info
+  - sh: $DOTNET_CMD --info
   - sh: apt install lsb lsb-core alien
   - sh: cd ./cspTools
   - sh: tar -xf linux_amd64_deb.tar

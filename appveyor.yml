@@ -188,7 +188,7 @@ install:
 - sh: cd ./cspTools
 - sh: hdiutil attach ru.cryptopro.csp.dmg
 - sh: cd /Volumes/ru.cryptopro.csp-5.0.*
-- sh: sudo installer -verbose -dumplog -pkg ru.cryptopro.csp-5.0.*.mpkg -target "/" -applyChoiceChangesXML /Users/appveyor/projects/corefx/cspTools/macos_install.xml
+- sh: sudo installer -verbose  -dumplog -pkg ru.cryptopro.csp-5.0.*.mpkg -target "/" -applyChoiceChangesXML /Users/appveyor/projects/corefx/cspTools/macos_install32.xml
 - sh: hdiutil detach /Volumes/ru.cryptopro.csp-5.0.*
 - sh: cd -
 - sh: sudo /opt/cprocsp/sbin/cpconfig -license -set "5050C-90030-05B5W-LTHVH-PFPU2"

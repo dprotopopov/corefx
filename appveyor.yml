@@ -32,7 +32,7 @@ on_finish:
 # runnng specified tests  
 test_script:
   - dotnet --info
-  - dotnet msbuild  src\\System.Security.Cryptography.Algorithms\\tests /t:BuildAndTest /p:ForceRunTests=true
+  - dotnet msbuild src\\System.Security.Cryptography.Algorithms\\tests /t:BuildAndTest /p:ForceRunTests=true
   - dotnet msbuild src\\System.Security.Cryptography.Primitives\\tests /t:BuildAndTest /p:ForceRunTests=true
   - dotnet msbuild src\\Common\\tests /t:BuildAndTest /p:ForceRunTests=true
   - dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3411.Tests.Gost3411CryptoServiceProviderTests" /p:ForceRunTests=true
@@ -67,19 +67,11 @@ test_script:
 
 # artifacts on successful build 
 artifacts:
-  #- path: artifacts\packages\**\*.nupkg
-  #  name: packages
   - path: artifacts\packages\Release
     name: packages-release
     type: zip
   - path: artifacts\packages\Debug
     name: packages-debug
-    type: zip
-  - path: artifacts\bin\runtime\netcoreapp-*-Release-x64
-    name: runtime
-    type: zip
-  - path: artifacts\bin\runtime\netcoreapp-*-Debug-x64
-    name: runtime-debug
     type: zip
 
 #Start of Windows specific configuration
@@ -117,7 +109,7 @@ for:
   build_script:
     - build.cmd
     - build.cmd -c Release
-    
+
   # deploy result
   deploy:
     release: $(APPVEYOR_REPO_TAG_NAME)
@@ -130,10 +122,16 @@ for:
     draft: true
     prerelease: true
     on:
-      #branch: 
-      #  - master                 # release from master branch only
-      #  - Fasjeit-auto-build
+      branch: 
+       - master                      # release from master branch only
       appveyor_repo_tag: true        # deploy only on tag push
+  artifacts:
+    - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Release-x64
+      name: runtime-release
+      type: zip
+    - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Debug-x64
+      name: runtime-debug
+      type: zip
 
 
 #Start of Linux specific build configuration
@@ -171,15 +169,11 @@ for:
     - sh: ./build.sh
     - sh: ./build.sh -c Release
 
-  # artifacts on successful build 
   artifacts:
-    - path: artifacts/packages
-      name: packages
+    - path: artifacts\bin\runtime\netcoreapp-Unix-Release-x64
+      name: runtime-release
       type: zip
-    - path: artifacts/bin/runtime
-      name: runtime
+    - path: artifacts\bin\runtime\netcoreapp-Unix-Debug-x64
+      name: runtime-debug
       type: zip
-      # - path: artifacts/packages
-      #   name: packages
-      #   type: zip
 

@@ -104,10 +104,10 @@ for:
   artifacts:
     #- path: artifacts\packages\**\*.nupkg
     #  name: packages
-    - path: artifacts\packages\Release
+    - path: artifacts\packages
       name: packages
       type: zip
-    - path: artifacts\bin\runtime\netcoreapp-*-Release-x64
+    - path: artifacts\bin\runtime
       name: runtime
       type: zip
 
@@ -166,8 +166,11 @@ for:
 
   # artifacts on successful build 
   artifacts:
-    - path: artifacts\packages\**\*.nupkg
+    - path: artifacts/packages
       name: packages
+      type: zip
+    - path: artifacts/bin/runtime
+      name: runtime
       type: zip
       # - path: artifacts/packages
       #   name: packages

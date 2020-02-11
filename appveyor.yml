@@ -64,6 +64,24 @@ test_script:
 #  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.Pkcs\tests\
 #  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.Xml\tests\
  
+
+# artifacts on successful build 
+artifacts:
+  #- path: artifacts\packages\**\*.nupkg
+  #  name: packages
+  - path: artifacts\packages\Release
+    name: packages-release
+    type: zip
+  - path: artifacts\packages\Debug
+    name: packages-debug
+    type: zip
+  - path: artifacts\bin\runtime\netcoreapp-*-Release-x64
+    name: runtime
+    type: zip
+  - path: artifacts\bin\runtime\netcoreapp-*-Debug-x64
+    name: runtime-debug
+    type: zip
+
 #Start of Windows specific configuration
 
 for:
@@ -99,17 +117,6 @@ for:
   build_script:
     - build.cmd
     - build.cmd -c Release
-
-  # artifacts on successful build 
-  artifacts:
-    #- path: artifacts\packages\**\*.nupkg
-    #  name: packages
-    - path: artifacts\packages\Release
-      name: packages
-      type: zip
-    - path: artifacts\bin\runtime\netcoreapp-*-Release-x64
-      name: runtime
-      type: zip
 
   # deploy result
   deploy:

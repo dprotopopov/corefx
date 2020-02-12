@@ -1,8 +1,8 @@
 # .NET Core Libraries (CoreFX)
 
-| Linux build | Windows build |
-|:---:|:---:|
-| [![Travis CI build status](https://travis-ci.com/CryptoProLLC/corefx.svg?branch=master)](https://travis-ci.com/CryptoProLLC/corefx) | [![Build status](https://ci.appveyor.com/api/projects/status/bl6w6pihcauka4r6?svg=true)](https://ci.appveyor.com/project/CryptoProLLC/corefx) |
+| Current build |
+|:---:|
+|[![Build status](https://ci.appveyor.com/api/projects/status/bl6w6pihcauka4r6?svg=true)](https://ci.appveyor.com/project/CryptoProLLC/corefx) |
 
 This repo contains the library implementation (called "CoreFX") for .NET Core. It includes System.Collections, System.IO, System.Xml, and many other components.
 The corresponding [.NET Core Runtime repo](https://github.com/dotnet/coreclr) (called "CoreCLR") contains the runtime implementation for .NET Core. It includes RyuJIT, the .NET GC, and many other components.

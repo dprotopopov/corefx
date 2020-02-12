@@ -1,6 +1,6 @@
 # .NET Core Libraries (CoreFX)
 
-| Current build |
+| Build status |
 |:---:|
 |[![Build status](https://ci.appveyor.com/api/projects/status/bl6w6pihcauka4r6?svg=true)](https://ci.appveyor.com/project/CryptoProLLC/corefx) |
 

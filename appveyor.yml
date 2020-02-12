@@ -52,12 +52,28 @@ test_script:
 
 # artifacts on successful build 
 artifacts:
-  - path: artifacts\packages\Release\**\*.nupkg
+  - path: artifacts\packages\Release\NonShipping\*.nupkg
     name: packages-release
     type: zip
-  - path: artifacts\packages\Debug\**\*.nupkg
+  - path: artifacts\packages\Debug\
     name: packages-debug
     type: zip
+
+# deploy result
+deploy:
+  release: $(APPVEYOR_REPO_TAG_NAME)
+  tag: $(APPVEYOR_REPO_TAG_NAME)
+  description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
+  provider: GitHub
+  auth_token:
+    secure: Vq7Hgyhj8MD2z7CWuI2HGCCcONVepJVQmDMg8oLUSk9fSJjbghYMgVYwl6BESuI5 # your encrypted token from GitHub
+  artifact: packages-release, packages-debug, runtime-release, runtime-debug
+  draft: true
+  prerelease: true
+  on:
+    # release from master branch only
+    branch: master
+    APPVEYOR_REPO_TAG: true        # deploy only on tag push
 
 #Start of Windows specific configuration
 for:
@@ -88,27 +104,10 @@ for:
   - ps: Copy-Item -Force -Recurse ".\NetStandard.Library\nugetReady\netstandard.library" -Destination "$env:userprofile\.nuget\packages\"
   # enable-rdp
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
   # build script logic
   build_script:
     - build.cmd
     - build.cmd -c Release
-
-  # deploy result
-  deploy:
-    release: $(APPVEYOR_REPO_TAG_NAME)
-    tag: $(APPVEYOR_REPO_TAG_NAME)
-    description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
-    provider: GitHub
-    auth_token:
-      secure: Vq7Hgyhj8MD2z7CWuI2HGCCcONVepJVQmDMg8oLUSk9fSJjbghYMgVYwl6BESuI5 # your encrypted token from GitHub
-    artifact: packages*
-    draft: true
-    prerelease: true
-    on:
-      branch: 
-       - master                      # release from master branch only
-      appveyor_repo_tag: true        # deploy only on tag push
   artifacts:
     - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Release-x64\
       name: runtime-release
@@ -153,10 +152,10 @@ for:
     - sh: ./build.sh -c Release
 
   artifacts:
-    - path: artifacts\bin\runtime\netcoreapp-Unix-Release-x64
+    - path: artifacts\bin\runtime\netcoreapp-Linux-Release-x64
       name: runtime-release
       type: zip
-    - path: artifacts\bin\runtime\netcoreapp-Unix-Debug-x64
+    - path: artifacts\bin\runtime\netcoreapp-Linux-Debug-x64
       name: runtime-debug
       type: zip
 

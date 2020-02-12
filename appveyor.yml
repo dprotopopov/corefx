@@ -101,7 +101,7 @@ for:
     description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
     provider: GitHub
     auth_token:
-      secure: 8tOMOmXZegbWNKbYUtypH+LVj6bj5dYWXbnSPWwWNqZldVnuY+lQQv1r2oFeBMMU # your encrypted token from GitHub
+      secure: Vq7Hgyhj8MD2z7CWuI2HGCCcONVepJVQmDMg8oLUSk9fSJjbghYMgVYwl6BESuI5 # your encrypted token from GitHub
     artifact: packages*
     draft: true
     prerelease: true

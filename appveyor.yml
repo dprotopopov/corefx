@@ -103,7 +103,7 @@ for:
   # build script logic
   build_script:
     - build.cmd
-    - build.cmd -c 
+    - build.cmd -c Release
     - ps: New-Item -ItemType Directory -Force -Path publish
     - 7z a -tzip publish\package_windows_debug.zip artifacts\packages\Debug\NonShipping\*.nupkg
     - 7z a -tzip publish\package_windows_release.zip artifacts\packages\Release\NonShipping\*.nupkg

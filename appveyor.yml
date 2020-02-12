@@ -1,5 +1,5 @@
 # version format
-version: 1.0.{build}
+version: 3.1.1.{build}
 
 # branches to build
 #branches:
@@ -52,12 +52,8 @@ test_script:
 
 # artifacts on successful build 
 artifacts:
-  - path: artifacts\packages\Release\NonShipping\*.nupkg
-    name: packages-release
-    type: zip
-  - path: artifacts\packages\Debug\
-    name: packages-debug
-    type: zip
+  - path: publish\*.zip
+    name: packages
 
 # deploy result
 deploy:
@@ -71,7 +67,7 @@ deploy:
   draft: true
   prerelease: true
   on:
-    # release from master branch only
+    # release from master branch onlya
     branch: master
     APPVEYOR_REPO_TAG: true        # deploy only on tag push
 
@@ -107,13 +103,16 @@ for:
   # build script logic
   build_script:
     - build.cmd
-    - build.cmd -c Release
+    - build.cmd -c 
+    - ps: New-Item -ItemType Directory -Force -Path publish
+    - 7za.exe a -tzip publish\package_windows_debug.zip artifacts\packages\Debug\NonShipping\*.nupkg
+    - 7za.exe a -tzip publish\package_windows_release.zip artifacts\packages\Release\NonShipping\*.nupkg
   artifacts:
     - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Release-x64\
-      name: runtime-release
+      name: runtime-release-windows
       type: zip
     - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Debug-x64\
-      name: runtime-debug
+      name: runtime-debug-windows
       type: zip
 
 #Start of Linux specific build configuration
@@ -150,13 +149,16 @@ for:
   build_script:
     - sh: ./build.sh
     - sh: ./build.sh -c Release
+    - sh: mkdir publish
+    - sh: 7za a -tzip publish/package_linux_release.zip artifacts/packages/Release/NonShipping/*.nupkg
+    - sh: 7za a -tzip publish/package_linux_debug.zip artifacts/packages/Debug/NonShipping/*.nupkg
 
   artifacts:
     - path: artifacts\bin\runtime\netcoreapp-Linux-Release-x64
-      name: runtime-release
+      name: runtime-release-linux
       type: zip
     - path: artifacts\bin\runtime\netcoreapp-Linux-Debug-x64
-      name: runtime-debug
+      name: runtime-debug-linux
       type: zip
 
 # -

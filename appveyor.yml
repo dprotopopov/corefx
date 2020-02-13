@@ -1,5 +1,5 @@
 # version format
-version: 1.0.{build}
+version: 3.1.1.{build}
 
 # branches to build
 #branches:
@@ -52,12 +52,8 @@ test_script:
 
 # artifacts on successful build 
 artifacts:
-  - path: artifacts\packages\Release\NonShipping\*.nupkg
-    name: packages-release
-    type: zip
-  - path: artifacts\packages\Debug\
-    name: packages-debug
-    type: zip
+  - path: publish\*.zip
+    name: packages
 
 # deploy result
 deploy:
@@ -67,11 +63,11 @@ deploy:
   provider: GitHub
   auth_token:
     secure: Vq7Hgyhj8MD2z7CWuI2HGCCcONVepJVQmDMg8oLUSk9fSJjbghYMgVYwl6BESuI5 # your encrypted token from GitHub
-  artifact: packages-release, packages-debug, runtime-release, runtime-debug
+  artifact: packages, runtime-release-linux, runtime-debug-linux, runtime-release-windows, runtime-debug-windows
   draft: true
   prerelease: true
   on:
-    # release from master branch only
+    # release from master branch onlya
     branch: master
     APPVEYOR_REPO_TAG: true        # deploy only on tag push
 
@@ -108,12 +104,21 @@ for:
   build_script:
     - build.cmd
     - build.cmd -c Release
+    - ps: New-Item -ItemType Directory -Force -Path publish
+    - cd artifacts\packages\Debug\NonShipping\
+    - 7z a -tzip package_windows_debug.zip *.nupkg
+    - cd ..\..\..\..\
+    - cd artifacts\packages\Release\NonShipping\
+    - 7z a -tzip package_windows_release.zip *.nupkg
+    - cd ..\..\..\..\
+    - move artifacts\packages\Debug\NonShipping\*.zip publish\
+    - move artifacts\packages\Release\NonShipping\*.zip publish\
   artifacts:
     - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Release-x64\
-      name: runtime-release
+      name: runtime-release-windows
       type: zip
     - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Debug-x64\
-      name: runtime-debug
+      name: runtime-debug-windows
       type: zip
 
 #Start of Linux specific build configuration
@@ -150,13 +155,18 @@ for:
   build_script:
     - sh: ./build.sh
     - sh: ./build.sh -c Release
+    - sh: mkdir publish
+    - sh: cd artifacts/packages/Release/NonShipping/; 7za a -tzip package_linux_release.zip *.nupkg; cd -
+    - sh: cd artifacts/packages/Debug/NonShipping/; 7za a -tzip package_linux_debug.zip *.nupkg; cd -
+    - sh: mv artifacts/packages/Debug/NonShipping/*.zip publish/
+    - sh: mv artifacts/packages/Release/NonShipping/*.zip publish/
 
   artifacts:
     - path: artifacts\bin\runtime\netcoreapp-Linux-Release-x64
-      name: runtime-release
+      name: runtime-release-linux
       type: zip
     - path: artifacts\bin\runtime\netcoreapp-Linux-Debug-x64
-      name: runtime-debug
+      name: runtime-debug-linux
       type: zip
 
 # -

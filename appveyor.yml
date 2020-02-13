@@ -63,7 +63,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: Vq7Hgyhj8MD2z7CWuI2HGCCcONVepJVQmDMg8oLUSk9fSJjbghYMgVYwl6BESuI5 # your encrypted token from GitHub
-  artifact: packages-release, packages-debug, runtime-release, runtime-debug
+  artifact: packages, runtime-release-linux, runtime-debug-linux, runtime-release-windows, runtime-debug-windows
   draft: true
   prerelease: true
   on:
@@ -105,8 +105,14 @@ for:
     - build.cmd
     - build.cmd -c Release
     - ps: New-Item -ItemType Directory -Force -Path publish
-    - 7z a -tzip publish\package_windows_debug.zip artifacts\packages\Debug\NonShipping\*.nupkg
-    - 7z a -tzip publish\package_windows_release.zip artifacts\packages\Release\NonShipping\*.nupkg
+    - cd artifacts\packages\Debug\NonShipping\
+    - 7z a -tzip package_windows_debug.zip *.nupkg
+    - cd ..\..\..\..\
+    - cd artifacts\packages\Release\NonShipping\
+    - 7z a -tzip package_windows_release.zip *.nupkg
+    - cd ..\..\..\..\
+    - move artifacts\packages\Debug\NonShipping\*.zip publish\
+    - move artifacts\packages\Release\NonShipping\*.zip publish\
   artifacts:
     - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Release-x64\
       name: runtime-release-windows
@@ -150,8 +156,10 @@ for:
     - sh: ./build.sh
     - sh: ./build.sh -c Release
     - sh: mkdir publish
-    - sh: 7za a -tzip publish/package_linux_release.zip artifacts/packages/Release/NonShipping/*.nupkg
-    - sh: 7za a -tzip publish/package_linux_debug.zip artifacts/packages/Debug/NonShipping/*.nupkg
+    - sh: cd artifacts/packages/Release/NonShipping/; 7za a -tzip package_linux_release.zip *.nupkg; cd -
+    - sh: cd artifacts/packages/Debug/NonShipping/; 7za a -tzip package_linux_debug.zip *.nupkg; cd -
+    - sh: mv artifacts/packages/Debug/NonShipping/*.zip publish/
+    - sh: mv artifacts/packages/Release/NonShipping/*.zip publish/
 
   artifacts:
     - path: artifacts\bin\runtime\netcoreapp-Linux-Release-x64

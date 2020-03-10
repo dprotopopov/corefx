@@ -142,6 +142,12 @@
     <None Include="System\Net\Security\TlsCipherSuiteData.Lookup.tt" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetsWindows)' == 'true'">
+    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecPkgContext_StreamSizes.cs">
+      <Link>Common\Interop\Windows\SspiCli\SecPkgContext_StreamSizes.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecPkgContext_Sizes.cs">
+      <Link>Common\Interop\Windows\SspiCli\SecPkgContext_Sizes.cs</Link>
+    </Compile>
     <Compile Include="System\Net\Security\SslStreamPal.SecurityPackagename.Windows.cs" />
     <Compile Include="System\Net\CertificateValidationPal.Windows.cs" />
     <Compile Include="$(CommonPath)\Interop\Windows\Interop.Libraries.cs">
@@ -236,9 +242,6 @@
     <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\NegotiationInfoClass.cs">
       <Link>Common\Interop\Windows\SspiCli\NegotiationInfoClass.cs</Link>
     </Compile>
-    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecPkgContext_Sizes.cs">
-      <Link>Common\Interop\Windows\SspiCli\SecPkgContext_Sizes.cs</Link>
-    </Compile>
     <Compile Include="$(CommonPath)\System\Collections\Generic\BidirectionalDictionary.cs">
       <Link>Common\System\Collections\Generic\BidirectionalDictionary.cs</Link>
     </Compile>
@@ -260,13 +263,16 @@
     <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SSPIWrapper.cs">
       <Link>Common\Interop\Windows\SspiCli\SSPIWrapper.cs</Link>
     </Compile>
-    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecPkgContext_StreamSizes.cs">
-      <Link>Common\Interop\Windows\SspiCli\SecPkgContext_StreamSizes.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetsUnix)' == 'true' ">
     <Compile Include="System\Net\CertificateValidationPal.cpcsp.cs" />
     <Compile Include="System\Net\Security\SslStreamPal.SecurityPackageName.cpcsp.cs" />
+    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecPkgContext_StreamSizes.Unix.cs">
+      <Link>Common\Interop\Windows\SspiCli\SecPkgContext_StreamSizes.Unix.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecPkgContext_Sizes.Unix.cs">
+      <Link>Common\Interop\Windows\SspiCli\SecPkgContext_Sizes.Unix.cs</Link>
+    </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecurityPackageInfoClass.Unix.cs">
       <Link>Common\Interop\Windows\SspiCli\SecurityPackageInfoClass.Unix.cs</Link>
     </Compile>

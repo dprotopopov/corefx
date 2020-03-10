@@ -10,9 +10,9 @@ namespace System.Net
     [StructLayout(LayoutKind.Sequential)]
     internal struct SecPkgContext_Sizes
     {
-        public readonly int cbMaxToken;
-        public readonly int cbMaxSignature;
-        public readonly int cbBlockSize;
-        public readonly int cbSecurityTrailer;
+        public readonly long cbMaxToken;
+        public readonly long cbMaxSignature;
+        public readonly long cbBlockSize;
+        public readonly long cbSecurityTrailer;
     }
 }

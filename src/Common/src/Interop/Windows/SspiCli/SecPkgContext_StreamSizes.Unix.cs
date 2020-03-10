@@ -8,11 +8,12 @@ namespace System.Net
 {
     // sspi.h
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SecPkgContext_Sizes
+    internal struct SecPkgContext_StreamSizes
     {
-        public readonly int cbMaxToken;
-        public readonly int cbMaxSignature;
-        public readonly int cbBlockSize;
-        public readonly int cbSecurityTrailer;
+        public long cbHeader;
+        public long cbTrailer;
+        public long cbMaximumMessage;
+        public long cBuffers;
+        public long cbBlockSize;
     }
 }

@@ -100,7 +100,7 @@ namespace System.Net.Security
 
             try
             {
-                long maxCount = checked(int.MaxValue - 4 - sizes.cbBlockSize - sizes.cbSecurityTrailer);
+                int maxCount = (int)checked(int.MaxValue - 4 - sizes.cbBlockSize - sizes.cbSecurityTrailer);
 
                 if (count > maxCount || count < 0)
                 {
@@ -113,7 +113,7 @@ namespace System.Net.Security
                 throw;
             }
 
-            long resultSize = count + sizes.cbSecurityTrailer + sizes.cbBlockSize;
+            int resultSize = (int)(count + sizes.cbSecurityTrailer + sizes.cbBlockSize);
             if (output == null || output.Length < resultSize + 4)
             {
                 output = new byte[resultSize + 4];

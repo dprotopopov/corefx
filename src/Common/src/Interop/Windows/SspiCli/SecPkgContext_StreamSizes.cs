@@ -10,10 +10,10 @@ namespace System.Net
     [StructLayout(LayoutKind.Sequential)]
     internal struct SecPkgContext_StreamSizes
     {
-        public long cbHeader;
-        public long cbTrailer;
-        public long cbMaximumMessage;
-        public long cBuffers;
-        public long cbBlockSize;
+        public int cbHeader;
+        public int cbTrailer;
+        public int cbMaximumMessage;
+        public int cBuffers;
+        public int cbBlockSize;
     }
 }

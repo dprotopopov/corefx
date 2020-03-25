@@ -151,15 +151,15 @@ namespace System.Security.Cryptography
 
         // GOST identifiers
         //begin: gost
-        public const string Gost3410 = "1.2.643.2.2.19";
-        public const string Gost3410EL = "1.2.643.2.2.19";
-        public const string Gost3410_2012_256 = "1.2.643.7.1.1.1.1";
-        public const string Gost3410_2012_512 = "1.2.643.7.1.1.1.2";
-        public const string Gost3411 = "1.2.643.2.2.9";
-        public const string Gost3411_2012_256 = "1.2.643.7.1.1.2.2";
-        public const string Gost3411_2012_512 = "1.2.643.7.1.1.2.3";
-        public const string Gost28147 = "1.2.643.2.2.21";
-        public const string GostVerbaO = "1.2.643.2.2.31.1";
+        public const string Gost3410 = GostConstants.OID_CP_GOST_R3410EL;
+        public const string Gost3410EL = GostConstants.OID_CP_GOST_R3410EL;
+        public const string Gost3410_2012_256 = GostConstants.OID_CP_GOST_R3410_12_256;
+        public const string Gost3410_2012_512 = GostConstants.OID_CP_GOST_R3410_12_512;
+        public const string Gost3411 = GostConstants.OID_CP_GOST_R3411;
+        public const string Gost3411_2012_256 = GostConstants.OID_CP_GOST_R3411_12_256;
+        public const string Gost3411_2012_512 = GostConstants.OID_CP_GOST_R3411_12_512;
+        public const string Gost28147 = GostConstants.OID_Gost28147;
+        public const string GostVerbaO = GostConstants.OID_CipherVerbaO;
         //end: gost
     }
 }

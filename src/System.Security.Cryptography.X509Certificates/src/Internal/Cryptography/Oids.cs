@@ -50,11 +50,5 @@ namespace Internal.Cryptography
         public const string ApplicationCertPolicies     = "1.3.6.1.4.1.311.21.10";
         public const string AuthorityInformationAccess  = "1.3.6.1.5.5.7.1.1";
         public const string CertificateAuthorityIssuers = "1.3.6.1.5.5.7.48.2";
-        //begin: gost
-        public const string Gost3410EL = "1.2.643.2.2.19";
-        public const string Gost3410_2012_256 = "1.2.643.7.1.1.1.1";
-        public const string Gost3410_2012_512 = "1.2.643.7.1.1.1.2";
-        //end: gost
-
     }
 }

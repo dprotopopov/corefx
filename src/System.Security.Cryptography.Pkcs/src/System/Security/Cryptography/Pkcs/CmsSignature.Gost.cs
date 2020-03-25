@@ -15,7 +15,8 @@ namespace System.Security.Cryptography.Pkcs
     {
         static partial void PrepareRegistrationGost(Dictionary<string, CmsSignature> lookup)
         {
-            lookup.Add(Oids.Gost3410, new GostCmsSignature());
+            lookup.Add(GostConstants.OID_CP_GOST_R3410EL, new GostCmsSignature());
+            lookup.Add(GostConstants.OID_CP_GOST_R3411_R3410EL, new GostCmsSignature());
         }
 
         private sealed class GostCmsSignature : CmsSignature
@@ -78,7 +79,7 @@ namespace System.Security.Cryptography.Pkcs
                     return false;
                 }
 
-                signatureAlgorithm = new Oid(Oids.Gost3410, Oids.Gost3410);
+                signatureAlgorithm = new Oid(GostConstants.OID_CP_GOST_R3410EL);
 
 #if netcoreapp
                 byte[] signature = new byte[privateKey.KeySize / 8];

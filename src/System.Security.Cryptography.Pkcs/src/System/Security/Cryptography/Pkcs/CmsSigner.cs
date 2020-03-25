@@ -96,17 +96,17 @@ namespace System.Security.Cryptography.Pkcs
             if (privateKey is Gost3410CryptoServiceProvider 
                 || certificate?.PrivateKey is Gost3410CryptoServiceProvider)
             {
-                DigestAlgorithm = Oid.FromOidValue(Oids.Gost3411, OidGroup.HashAlgorithm);
+                DigestAlgorithm = Oid.FromOidValue(GostConstants.OID_CP_GOST_R3411, OidGroup.HashAlgorithm);
             }
             else if (privateKey is Gost3410_2012_256CryptoServiceProvider 
                 || certificate?.PrivateKey is Gost3410_2012_256CryptoServiceProvider)
             {
-                DigestAlgorithm = Oid.FromOidValue(Oids.Gost3411_2012_256, OidGroup.HashAlgorithm);
+                DigestAlgorithm = Oid.FromOidValue(GostConstants.OID_CP_GOST_R3411_12_256, OidGroup.HashAlgorithm);
             }
             else if (privateKey is Gost3410_2012_512CryptoServiceProvider
                 || certificate?.PrivateKey is Gost3410_2012_512CryptoServiceProvider )
             {
-                DigestAlgorithm = Oid.FromOidValue(Oids.Gost3411_2012_512, OidGroup.HashAlgorithm);
+                DigestAlgorithm = Oid.FromOidValue(GostConstants.OID_CP_GOST_R3411_12_512, OidGroup.HashAlgorithm);
             }
             else
             {

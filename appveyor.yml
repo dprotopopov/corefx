@@ -103,7 +103,7 @@ for:
   # build script logic
   build_script:
     - build.cmd
-    #- build.cmd -c Release
+    - build.cmd -c Release
     - ps: New-Item -ItemType Directory -Force -Path publish
     - cd artifacts\packages\Debug\NonShipping\
     - 7z a -tzip package_windows_debug.zip *.nupkg
@@ -157,7 +157,7 @@ for:
   - sh: sudo sed -i '/[Parameters]/a ControlKeyTimeValidity2012=ll:0' /etc/opt/cprocsp/config64.ini
 
   build_script:
-    #- sh: ./build.sh
+    - sh: ./build.sh
     - sh: ./build.sh -c Release
     - sh: mkdir publish
     - sh: cd artifacts/packages/Release/NonShipping/; 7za a -tzip package_linux_release.zip *.nupkg; cd -

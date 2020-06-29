@@ -17,7 +17,8 @@ internal partial class Interop
             KP_ALGID = 7,
             KP_KEYLEN = 9,
             KP_CIPHEROID = 104,
-        }
+            KP_CERTIFICATE = 26,
+    }
 
         [DllImport(Libraries.Advapi32, SetLastError = true)]
         public static extern bool CryptGetKeyParam(

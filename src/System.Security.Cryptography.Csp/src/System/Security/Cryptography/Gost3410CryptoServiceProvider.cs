@@ -934,22 +934,21 @@ namespace System.Security.Cryptography
         //public X509Certificate2 ContainerCertificate
         //{
         //    [SecuritySafeCritical]
-        //    [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
         //    get
         //    {
-        //        byte[] rawData = COMCryptography.GetContainerCertificate(
+        //        byte[] rawData = CapiHelper.GetContainerCertificate(
         //            SafeKeyHandle);
         //        if (rawData == null)
         //            return null;
         //        X509Certificate2 ret = new X509Certificate2(rawData);
-        ////Ошибка до сборки 1.0.4015.0 включительно.
-        ////возвращался сертификат, без обратной привязки на собственный секретный ключ
-        ////Есть способ просто установить ссылку, через документированный интерфейс:
-        ////ret.PrivateKey = this;
-        ////но, во-первых, он излишне долгий, т.к. происходит генерация открытого ключа
-        ////и проверка соответствия, что делать не требуется так как сертификат
-        ////уже есть в контейнере.
-        ////во-вторых, требует обработки исключений при несоответсвии
+        //        //Ошибка до сборки 1.0.4015.0 включительно.
+        //        //возвращался сертификат, без обратной привязки на собственный секретный ключ
+        //        //Есть способ просто установить ссылку, через документированный интерфейс:
+        //        //ret.PrivateKey = this;
+        //        //но, во-первых, он излишне долгий, т.к. происходит генерация открытого ключа
+        //        //и проверка соответствия, что делать не требуется так как сертификат
+        //        //уже есть в контейнере.
+        //        //во-вторых, требует обработки исключений при несоответсвии
         //        object m_safeCertContext = CPX509Certificate2.SafeCertContextFieldInfo.GetValue(ret);
         //        try
         //        {
@@ -962,14 +961,13 @@ namespace System.Security.Cryptography
         //        return ret;
         //    }
         //    [SecuritySafeCritical]
-        //    [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
         //    set
         //    {
         //        if (value == null)
         //            throw new ArgumentNullException("value");
         //        byte[] rawData = value.RawData;
 
-        //        COMCryptography.SetKeyParamRgb(SafeKeyHandle,
+        //        CapiHelper.SetKeyParameter(SafeKeyHandle,
         //            GostConstants.KP_CERTIFICATE, rawData);
         //    }
         //}

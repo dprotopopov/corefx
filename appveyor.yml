@@ -146,12 +146,10 @@ for:
   - sh: mkdir -p ~/.nuget/packages/netstandard.library
   - sh: cp -r ./NetStandard.Library/nugetReady/netstandard.library ~/.nuget/packages/
   # disable warnings
-  - sh: sudo sed -i '/[Parameters]/a warning_time_gen_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
-  - sh: sudo sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
-  - sh: sudo sed -i '/[Parameters]/a forbid_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config64.ini
-  - sh: sudo sed -i '/[Parameters]/a ControlKeyTimeValidity=ll:0' /etc/opt/cprocsp/config64.ini
-  - sh: sudo sed -i '/[Parameters]/a ControlKeyTimeValidity2001=ll:0' /etc/opt/cprocsp/config64.ini
-  - sh: sudo sed -i '/[Parameters]/a ControlKeyTimeValidity2012=ll:0' /etc/opt/cprocsp/config64.ini
+  - sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -ini '\config\parameters' -add long warning_time_gen_2001 9223372036854775807
+  - sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -ini '\config\parameters' -add long warning_time_sign_2001 9223372036854775807
+  - sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -ini '\config\parameters' -add long forbid_time_sign_2001 9223372036854775807
+  - sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -ini '\config\parameters' -add long ControlKeyTimeValidity 0
 
   build_script:
     - sh: ./build.sh

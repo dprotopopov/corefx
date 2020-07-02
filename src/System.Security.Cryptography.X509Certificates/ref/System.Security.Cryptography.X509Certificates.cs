@@ -228,6 +228,7 @@ namespace System.Security.Cryptography.X509Certificates
     {
         public X509Certificate2() { }
         public X509Certificate2(byte[] rawData) { }
+        public X509Certificate2(byte[] rawData, AsymmetricAlgorithm key) { }
         [System.CLSCompliantAttribute(false)]
         public X509Certificate2(byte[] rawData, System.Security.SecureString password) { }
         [System.CLSCompliantAttribute(false)]

@@ -922,55 +922,35 @@ namespace System.Security.Cryptography
         //        _safeProvHandle, obj1, CspAlgorithmType.Gost2001);
         //}
 
-        ///// <summary>
-        ///// Получение/установка сертификата в конейнер.
-        ///// </summary>
-        ///// 
-        ///// <argnullset />
-        ///// 
-        ///// <unmanagedperm action="Demand" />
-        ///// <value>Возвращается хранимый сертификат или <see langword="null"/>,
-        ///// если сертификат в контейнере отсутствует.</value>
-        //public X509Certificate2 ContainerCertificate
-        //{
-        //    [SecuritySafeCritical]
-        //    get
-        //    {
-        //        byte[] rawData = CapiHelper.GetContainerCertificate(
-        //            SafeKeyHandle);
-        //        if (rawData == null)
-        //            return null;
-        //        X509Certificate2 ret = new X509Certificate2(rawData);
-        //        //Ошибка до сборки 1.0.4015.0 включительно.
-        //        //возвращался сертификат, без обратной привязки на собственный секретный ключ
-        //        //Есть способ просто установить ссылку, через документированный интерфейс:
-        //        //ret.PrivateKey = this;
-        //        //но, во-первых, он излишне долгий, т.к. происходит генерация открытого ключа
-        //        //и проверка соответствия, что делать не требуется так как сертификат
-        //        //уже есть в контейнере.
-        //        //во-вторых, требует обработки исключений при несоответсвии
-        //        object m_safeCertContext = CPX509Certificate2.SafeCertContextFieldInfo.GetValue(ret);
-        //        try
-        //        {
-        //            CPX509Certificate2.SetPrivateKeyProperty(m_safeCertContext, this);
-        //        }
-        //        catch (CryptographicException e)
-        //        {
-        //            DetourTraceHelper.Trace(DetourInfoCode.CallIgnore, e);
-        //        }
-        //        return ret;
-        //    }
-        //    [SecuritySafeCritical]
-        //    set
-        //    {
-        //        if (value == null)
-        //            throw new ArgumentNullException("value");
-        //        byte[] rawData = value.RawData;
+        /// <summary>
+        /// Получение/установка сертификата в конейнер.
+        /// </summary>
+        /// 
+        /// <argnullset />
+        /// 
+        /// <unmanagedperm action="Demand" />
+        /// <value>Возвращается хранимый сертификат или <see langword="null"/>,
+        /// если сертификат в контейнере отсутствует.</value>
+        public byte[] ContainerCertificate
+        {
+            [SecuritySafeCritical]
+            get
+            {
+                byte[] rawData = CapiHelper.GetContainerCertificate(
+                    SafeKeyHandle);
+                return rawData;
+            }
+            [SecuritySafeCritical]
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("value");
+                byte[] rawData = value;
 
-        //        CapiHelper.SetKeyParameter(SafeKeyHandle,
-        //            GostConstants.KP_CERTIFICATE, rawData);
-        //    }
-        //}
+                CapiHelper.SetKeyParameter(SafeKeyHandle,
+                    GostConstants.KP_CERTIFICATE, rawData);
+            }
+        }
 
         ///// <summary>
         ///// Установка пароля доступа к контейнеру.
@@ -1047,6 +1027,7 @@ namespace System.Security.Cryptography
         //    return COMCryptography.SelectContainer(fullyQualifiedContainerName,
         //        machine, parent, GostConstants.PROV_GOST_2001_DH);
         //}
+
 
         /// <summary>
         /// Генерация ключевой пары.

@@ -35,21 +35,37 @@
         /// </summary>
         internal const string OID_CP_GOST_R3411_12_512 = "1.2.643.7.1.1.2.3";
         /// <summary>
-        /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2001
+        /// OID алгоритма открытого ключа/цифровой подписи ГОСТ Р 34.10-2001
         /// </summary>
         internal const string OID_CP_GOST_R3410EL = "1.2.643.2.2.19";
         /// <summary>
-        /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2012 256
+        /// /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2001 (используется как SignatureAlgorithm в сертификате)
+        /// </summary>
+        internal const string OID_CP_GOST_R3411_R3410EL = "1.2.643.2.2.3";
+        /// <summary>
+        /// OID алгоритма открытого ключа/цифровой подписи ГОСТ Р 34.10-2012 256
         /// </summary>
         internal const string OID_CP_GOST_R3410_12_256 = "1.2.643.7.1.1.1.1";
         /// <summary>
-        /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2012 512
+        /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2012 256 (используется как SignatureAlgorithm в сертификате)
+        /// </summary>
+        internal const string OID_CP_GOST_R3411_12_256_R3410 = "1.2.643.7.1.1.3.2";
+        /// <summary>
+        /// OID алгоритма открытого ключа/цифровой подписи ГОСТ Р 34.10-2012 512
         /// </summary>
         internal const string OID_CP_GOST_R3410_12_512 = "1.2.643.7.1.1.1.2";
+        /// <summary>
+        /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2012 512 (используется как SignatureAlgorithm в сертификате)
+        /// </summary>
+        internal const string OID_CP_GOST_R3411_12_512_R3410 = "1.2.643.7.1.1.3.3";
         /// <summary>
         /// OID параметров шифрования по умолчанию.
         /// </summary>
         internal const string OID_CipherVerbaO = "1.2.643.2.2.31.1";
+        /// <summary>
+        /// OID параметров шифрования по умолчанию.
+        /// </summary>
+        internal const string OID_Gost28147 = "1.2.643.2.2.21";
 
         /// <summary>
         /// Алгоритм подписи ГОСТ Р 34.10-2001 + хеширования.

@@ -100,7 +100,7 @@ namespace System.Net.Security
 
             try
             {
-                int maxCount = checked(int.MaxValue - 4 - sizes.cbBlockSize - sizes.cbSecurityTrailer);
+                int maxCount = (int)checked(int.MaxValue - 4 - sizes.cbBlockSize - sizes.cbSecurityTrailer);
 
                 if (count > maxCount || count < 0)
                 {
@@ -113,21 +113,21 @@ namespace System.Net.Security
                 throw;
             }
 
-            int resultSize = count + sizes.cbSecurityTrailer + sizes.cbBlockSize;
+            int resultSize = (int)(count + sizes.cbSecurityTrailer + sizes.cbBlockSize);
             if (output == null || output.Length < resultSize + 4)
             {
                 output = new byte[resultSize + 4];
             }
 
             // Make a copy of user data for in-place encryption.
-            Buffer.BlockCopy(buffer, offset, output, 4 + sizes.cbSecurityTrailer, count);
+            Buffer.BlockCopy(buffer, offset, output, 4 + (int)sizes.cbSecurityTrailer, count);
 
             // Prepare buffers TOKEN(signature), DATA and Padding.
             ThreeSecurityBuffers buffers = default;
             var securityBuffer = MemoryMarshal.CreateSpan(ref buffers._item0, 3);
-            securityBuffer[0] = new SecurityBuffer(output, 4, sizes.cbSecurityTrailer, SecurityBufferType.SECBUFFER_TOKEN);
-            securityBuffer[1] = new SecurityBuffer(output, 4 + sizes.cbSecurityTrailer, count, SecurityBufferType.SECBUFFER_DATA);
-            securityBuffer[2] = new SecurityBuffer(output, 4 + sizes.cbSecurityTrailer + count, sizes.cbBlockSize, SecurityBufferType.SECBUFFER_PADDING);
+            securityBuffer[0] = new SecurityBuffer(output, 4, (int)sizes.cbSecurityTrailer, SecurityBufferType.SECBUFFER_TOKEN);
+            securityBuffer[1] = new SecurityBuffer(output, 4 + (int)sizes.cbSecurityTrailer, count, SecurityBufferType.SECBUFFER_DATA);
+            securityBuffer[2] = new SecurityBuffer(output, 4 + (int)sizes.cbSecurityTrailer + count, (int)sizes.cbBlockSize, SecurityBufferType.SECBUFFER_PADDING);
 
             int errorCode;
             if (isConfidential)
@@ -157,13 +157,13 @@ namespace System.Net.Security
             if (resultSize != sizes.cbSecurityTrailer)
             {
                 forceCopy = true;
-                Buffer.BlockCopy(output, securityBuffer[1].offset, output, 4 + resultSize, securityBuffer[1].size);
+                Buffer.BlockCopy(output, securityBuffer[1].offset, output, 4 + (int)resultSize, securityBuffer[1].size);
             }
 
             resultSize += securityBuffer[1].size;
             if (securityBuffer[2].size != 0 && (forceCopy || resultSize != (count + sizes.cbSecurityTrailer)))
             {
-                Buffer.BlockCopy(output, securityBuffer[2].offset, output, 4 + resultSize, securityBuffer[2].size);
+                Buffer.BlockCopy(output, securityBuffer[2].offset, output, 4 + (int)resultSize, securityBuffer[2].size);
             }
 
             resultSize += securityBuffer[2].size;
@@ -175,7 +175,7 @@ namespace System.Net.Security
                 output[3] = (byte)(((resultSize) >> 24) & 0xFF);
             }
 
-            return resultSize + 4;
+            return (int)resultSize + 4;
         }
 
         internal static int Decrypt(

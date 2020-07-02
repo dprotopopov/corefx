@@ -259,6 +259,8 @@ namespace Internal.Cryptography
                 _hProv = hProv;
                 _hKey = hMacKey;
                 _hHash = hMacHash;
+                _hHash.SetParent(_hProv);
+                _hKey.SetParent(_hProv);
             }
         }
     }

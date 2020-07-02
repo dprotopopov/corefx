@@ -191,6 +191,10 @@ namespace System.Security.Cryptography
                 string Gost3411_2012_512Type = "System.Security.Cryptography.Gost3411_2012_512CryptoServiceProvider, " + AssemblyName_Csp;
 
                 string Gost28147Type = "System.Security.Cryptography.Gost28147CryptoServiceProvider, " + AssemblyName_Csp;
+
+                string HMACGost3411Type = "System.Security.Cryptography.HMACGost3411, " + AssemblyName_Csp;
+                string HMACGost3411_2012_256Type = "System.Security.Cryptography.HMACGost3411_2012_256, " + AssemblyName_Csp;
+                string HMACGost3411_2012_512Type = "System.Security.Cryptography.HMACGost3411_2012_512, " + AssemblyName_Csp;                
                 //end: gost
 
                 // Random number generator
@@ -215,6 +219,11 @@ namespace System.Security.Cryptography
 
                 ht.Add("Gost28147", Gost28147Type);
                 ht.Add("System.Security.Cryptography.Gost28147", Gost28147Type);
+
+                ht.Add("HMACGOST3411", HMACGost3411Type);
+                ht.Add("HMACGOST3411_2012_256", HMACGost3411_2012_256Type);
+                ht.Add("HMACGOST3411_2012_512", HMACGost3411_2012_512Type);
+
                 //end: gost
 
                 ht.Add("MD5", MD5CryptoServiceProviderType);

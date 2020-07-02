@@ -1,5 +1,5 @@
 # version format
-version: 1.0.{build}
+version: 3.1.1.{build}
 
 # branches to build
 #branches:
@@ -8,7 +8,10 @@ version: 1.0.{build}
 #    - master
     
 # Build worker image (VM template)
-image: Visual Studio 2017
+image:
+  - Visual Studio 2019
+  - Ubuntu
+  # - macos
 
 # RDP user is DAIAD\appveyor
 # password in project settings
@@ -16,8 +19,46 @@ image: Visual Studio 2017
 #environment:
 #  APPVEYOR_RDP_PASSWORD: <password_here>
 
-# install csp
-install:
+# disable automatic test discovery, xUnit already runs as part of build.cmd
+test: off
+
+# on_finish:
+  # uncomment line below to make VM wait untill RdpConnection
+  # - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+    # pushing all *.nupkg files in build directory recursively
+  #- ps: Get-ChildItem "artifacts\packages\**\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  #- ps: Get-ChildItem "artifacts\packages\**\symbols\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+ 
+
+# artifacts on successful build 
+artifacts:
+  - path: publish\*.zip
+    name: packages
+
+# deploy result
+deploy:
+  release: $(APPVEYOR_REPO_TAG_NAME)
+  tag: $(APPVEYOR_REPO_TAG_NAME)
+  description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
+  provider: GitHub
+  auth_token:
+    secure: Vq7Hgyhj8MD2z7CWuI2HGCCcONVepJVQmDMg8oLUSk9fSJjbghYMgVYwl6BESuI5 # your encrypted token from GitHub
+  artifact: packages, runtime-release-linux, runtime-debug-linux, runtime-release-windows, runtime-debug-windows
+  draft: true
+  prerelease: true
+  on:
+    # release from master branch onlya
+    branch: master
+    APPVEYOR_REPO_TAG: true        # deploy only on tag push
+
+#Start of Windows specific configuration
+for:
+-
+  matrix:
+    only:
+      - image: Visual Studio 2019
+  # install csp
+  install:
   - cmd: cspTools\CSPSetup.exe -silent -lang eng -noreboot -nodlg -args "PIDKEY=5050E-30030-06W59-AW5WP-D3G5M /quiet"
   - ps: Start-Sleep -s 160
   - cmd: regedit.exe /S cspTools\disableWarnings.reg
@@ -33,85 +74,152 @@ install:
   - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -keyset -enum_c -verifyc -uniq'
   - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -keyset -enum_c -verifyc -fqcn'
   - cmd: '"C:\Program Files\Crypto Pro\CSP\csptest" -enum -info -type PP_ENUMALGS'
-  # getting pached nuget packages with gost support
+  # getting patched nuget packages with gost support
   - cmd: git clone https://github.com/CryptoProLLC/NetStandard.Library
   - ps: New-Item -ItemType Directory -Force -Path "$env:userprofile\.nuget\packages\netstandard.library"
   - ps: Copy-Item -Force -Recurse ".\NetStandard.Library\nugetReady\netstandard.library" -Destination "$env:userprofile\.nuget\packages\"
   # enable-rdp
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  # build script logic
+  build_script:
+    - build.cmd
+    - build.cmd -c Release
+    - ps: New-Item -ItemType Directory -Force -Path publish
+    - cd artifacts\packages\Debug\NonShipping\
+    - 7z a -tzip package_windows_debug.zip *.nupkg
+    - cd ..\..\..\..\
+    - cd artifacts\packages\Release\NonShipping\
+    - 7z a -tzip package_windows_release.zip *.nupkg
+    - cd ..\..\..\..\
+    - move artifacts\packages\Debug\NonShipping\*.zip publish\
+    - move artifacts\packages\Release\NonShipping\*.zip publish\
+    # runnng specified tests  
+  test_script:
+    - .\\.dotnet\\dotnet --info
+    - .\\.dotnet\\dotnet msbuild src\\System.Security.Cryptography.Algorithms\\tests /t:BuildAndTest /p:ForceRunTests=true
+    - .\\.dotnet\\dotnet msbuild src\\System.Security.Cryptography.Primitives\\tests /t:BuildAndTest /p:ForceRunTests=true
+    - .\\.dotnet\\dotnet msbuild src\\Common\\tests /t:BuildAndTest /p:ForceRunTests=true
+    - .\\.dotnet\\dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3411.Tests.Gost3411CryptoServiceProviderTests" /p:ForceRunTests=true
+    - .\\.dotnet\\dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410CryptoServiceProviderTests" /p:ForceRunTests=true
+    - .\\.dotnet\\dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410_2012_256CryptoServiceProviderTests" /p:ForceRunTests=true
+    - .\\.dotnet\\dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410_2012_512CryptoServiceProviderTests" /p:ForceRunTests=true
+    - .\\.dotnet\\dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Csp.Tests.Gost28147CryptoServiceProviderTest" /p:ForceRunTests=true
+    - .\\.dotnet\\dotnet msbuild src\\System.Security.Cryptography.Xml\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Xml.Tests.GostSignedXmlTest"  /p:ForceRunTests=true
 
-# build script logic
-build_script:
-  - build.cmd -clean
-  - build.cmd  
+    #  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.Csp\tests\
+    #  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.X509Certificates\tests\
+    #  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.Pkcs\tests\
+    #  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.Xml\tests\
+  artifacts:
+    - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Release-x64\
+      name: runtime-release-windows
+      type: zip
+    - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Debug-x64\
+      name: runtime-debug-windows
+      type: zip
 
-# disable automatic test discovery, xUnit already runs as part of build.cmd
-test: off
-  
-# runnng specified tests  
-test_script:
-  - .dotnet\dotnet --info
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Csp\tests\ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3411.Tests.Gost3411CryptoServiceProviderTests" /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.Gost3411Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.Gost3411_2012_256Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.Gost3411_2012_512Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.HMACGost3411Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.HMACGost3411_2012_256Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.MD5Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.SHA1Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.SHA256Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.SHA384Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.SHA512Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.HMACMD5Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.HMACSHA1Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.HMACSHA256Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.HMACSHA384Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.HMACSHA512Tests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Algorithms\tests\ /t:BuildAndTest  "/p:XunitOptions=-class System.Security.Cryptography.Hashing.Algorithms.Tests.ReusabilityTests"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Csp\tests\ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410CryptoServiceProviderTests" /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Csp\tests\ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410_2012_256CryptoServiceProviderTests" /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Csp\tests\ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410_2012_512CryptoServiceProviderTests" /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Csp\tests\ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Csp.Tests.Gost28147CryptoServiceProviderTest" /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild src\System.Security.Cryptography.Xml\tests\ /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Xml.Tests.GostSignedXmlTest"  /p:ForceRunTests=true
-  - .dotnet\dotnet msbuild /t:BuildAndTest src\Common\tests\
-#  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.Algorithms\tests\
-#  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.Primitives\tests\
-#  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.Csp\tests\
-#  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.X509Certificates\tests\
-#  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.Pkcs\tests\
-#  - .dotnet\dotnet msbuild /t:BuildAndTest src\System.Security.Cryptography.Xml\tests\
- 
-# artifacts on succesfull build 
-artifacts:
-  #- path: artifacts\packages\**\*.nupkg
-  #  name: packages
-  - path: artifacts\packages
-    name: packages
-    type: zip
-  - path: artifacts\bin\runtime\netcoreapp-Windows_NT-Debug-x64
-    name: runtime
-    type: zip
- 
-# deploy result
-deploy:
-  release: $(APPVEYOR_REPO_TAG_NAME)
-  tag: $(APPVEYOR_REPO_TAG_NAME)
-  description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
-  provider: GitHub
-  auth_token:
-    secure: 8tOMOmXZegbWNKbYUtypH+LVj6bj5dYWXbnSPWwWNqZldVnuY+lQQv1r2oFeBMMU # your encrypted token from GitHub
-  artifact: packages
-  draft: true
-  prerelease: true
-  on:
-    #branch: 
-    #  - master                 # release from master branch only
-    #  - Fasjeit-auto-build
-    appveyor_repo_tag: true        # deploy only on tag push
-    
-on_finish:
-# uncomment line below to make VM wait untill RdpConnection
-# - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-  # pushing all *.nupkg files in build directory recursively
-#- ps: Get-ChildItem "artifacts\packages\**\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-#- ps: Get-ChildItem "artifacts\packages\**\symbols\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+#Start of Linux specific build configuration
+-
+  matrix:
+    only:
+      - image: Ubuntu
+  install:
+  - sh: sudo apt-get update
+  - sh: sudo apt install -y lsb lsb-core alien libkrb5-dev
+  - sh: cd ./cspTools
+  - sh: tar -xf linux_amd64_deb.tar
+  - sh: sudo ./linux_amd64_deb/install.sh
+  - sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -license -set "5050C-90030-05B5W-LTHVH-PFPU2"
+  #install container
+  - sh: mkdir -p /var/opt/cprocsp/keys/appveyor/
+  - sh: cp -r ./G2001256.000 /var/opt/cprocsp/keys/appveyor/
+  - sh: cp -r ./G2012256.001 /var/opt/cprocsp/keys/appveyor/
+  - sh: cp -r ./G2012512.000 /var/opt/cprocsp/keys/appveyor/
+  - sh: cd ../
+  - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"
+  - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 80 -pattern "G2012256"
+  - sh: /opt/cprocsp/bin/amd64/csptest  -absorb -certs -provtype 81 -pattern "G2012512"
+  - sh: /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -uniq
+  - sh: /opt/cprocsp/bin/amd64/csptest  -keyset -enum_c -verifyc -fqcn
+  # getting patched nuget packages with gost support
+  - sh: git clone https://github.com/CryptoProLLC/NetStandard.Library
+  - sh: mkdir -p ~/.nuget/packages/netstandard.library
+  - sh: cp -r ./NetStandard.Library/nugetReady/netstandard.library ~/.nuget/packages/
+  # disable warnings
+  - sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -ini '\config\parameters' -add long warning_time_gen_2001 9223372036854775807
+  - sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -ini '\config\parameters' -add long warning_time_sign_2001 9223372036854775807
+  - sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -ini '\config\parameters' -add long forbid_time_sign_2001 9223372036854775807
+  - sh: sudo /opt/cprocsp/sbin/amd64/cpconfig -ini '\config\parameters' -add long ControlKeyTimeValidity 0
+
+  build_script:
+    - sh: ./build.sh
+    - sh: ./build.sh -c Release
+    - sh: mkdir publish
+    - sh: cd artifacts/packages/Release/NonShipping/; 7za a -tzip package_linux_release.zip *.nupkg; cd -
+    - sh: cd artifacts/packages/Debug/NonShipping/; 7za a -tzip package_linux_debug.zip *.nupkg; cd -
+    - sh: mv artifacts/packages/Debug/NonShipping/*.zip publish/
+    - sh: mv artifacts/packages/Release/NonShipping/*.zip publish/
+  # runnng specified tests  
+  test_script:
+    - ./.dotnet/dotnet --info
+    - ./.dotnet/dotnet msbuild src\\System.Security.Cryptography.Algorithms\\tests /t:BuildAndTest /p:ForceRunTests=true
+    - ./.dotnet/dotnet msbuild src\\System.Security.Cryptography.Primitives\\tests /t:BuildAndTest /p:ForceRunTests=true
+    - ./.dotnet/dotnet msbuild src\\Common\\tests /t:BuildAndTest /p:ForceRunTests=true
+    - ./.dotnet/dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3411.Tests.Gost3411CryptoServiceProviderTests" /p:ForceRunTests=true
+    - ./.dotnet/dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410CryptoServiceProviderTests" /p:ForceRunTests=true
+    - ./.dotnet/dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410_2012_256CryptoServiceProviderTests" /p:ForceRunTests=true
+    - ./.dotnet/dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Encryption.Gost3410.Tests.Gost3410_2012_512CryptoServiceProviderTests" /p:ForceRunTests=true
+    - ./.dotnet/dotnet msbuild src\\System.Security.Cryptography.Csp\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Csp.Tests.Gost28147CryptoServiceProviderTest" /p:ForceRunTests=true
+    - ./.dotnet/dotnet msbuild src\\System.Security.Cryptography.Xml\\tests /t:BuildAndTest "/p:XunitOptions=-class System.Security.Cryptography.Xml.Tests.GostSignedXmlTest"  /p:ForceRunTests=true
+  artifacts:
+    - path: artifacts\bin\runtime\netcoreapp-Linux-Release-x64
+      name: runtime-release-linux
+      type: zip
+    - path: artifacts\bin\runtime\netcoreapp-Linux-Debug-x64
+      name: runtime-debug-linux
+      type: zip
+
+# -
+#   matrix:
+#     only:
+#       - image: macos
+    # install:
+    # - sh: ls /usr/local/Cellar/
+    # - sh: ls /usr/local/Cellar/openssl/
+    # - sh: cd ./cspTools
+    # - sh: hdiutil attach ru.cryptopro.csp.dmg
+    # - sh: cd /Volumes/ru.cryptopro.csp-5.0.*
+    # - sh: sudo installer -verbose  -dumplog -pkg ru.cryptopro.csp-5.0.*.mpkg -target "/" -applyChoiceChangesXML /Users/appveyor/projects/corefx/cspTools/macos_install32.xml
+    # - sh: hdiutil detach /Volumes/ru.cryptopro.csp-5.0.*
+    # - sh: cd -
+    # - sh: sudo /opt/cprocsp/sbin/cpconfig -license -set "5050C-90030-05B5W-LTHVH-PFPU2"
+    # #install container
+    # - sh: mkdir -p /var/opt/cprocsp/keys/appveyor/
+    # - sh: cp -r ./G2001256.000 /var/opt/cprocsp/keys/appveyor/
+    # - sh: cp -r ./G2012256.001 /var/opt/cprocsp/keys/appveyor/
+    # - sh: cp -r ./G2012512.000 /var/opt/cprocsp/keys/appveyor/
+    # - sh: cd ../
+    # - sh: /opt/cprocsp/bin/csptest  -absorb -certs -provtype 75 -provider "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider" -pattern "G2001256.000"
+    # - sh: /opt/cprocsp/bin/csptest  -absorb -certs -provtype 80 -pattern "G2012256"
+    # - sh: /opt/cprocsp/bin/csptest  -absorb -certs -provtype 81 -pattern "G2012512"
+    # - sh: /opt/cprocsp/bin/csptest  -keyset -enum_c -verifyc -uniq
+    # - sh: /opt/cprocsp/bin/csptest  -keyset -enum_c -verifyc -fqcn
+    # # getting patched nuget packages with gost support
+    # - sh: git clone https://github.com/CryptoProLLC/NetStandard.Library
+    # - sh: mkdir -p ~/.nuget/packages/netstandard.library
+    # - sh: cp -r ./NetStandard.Library/nugetReady/netstandard.library ~/.nuget/packages/
+    # # disable warnings
+    # - sh: sudo sed -i '/[Parameters]/a warning_time_gen_2001=ll:9223372036854775807' /etc/opt/cprocsp/config.ini
+    # - sh: sudo sed -i '/[Parameters]/a warning_time_sign_2001=ll:9223372036854775807' /etc/opt/cprocsp/config.ini
+
+    # build_script:
+    #   - sh: ./build.sh
+    #   - sh: ./build.sh -c Release
+
+    # artifacts:
+    #   - path: artifacts\bin\runtime\netcoreapp-OSX-Release-x64
+    #     name: runtime-release
+    #     type: zip
+    #   - path: artifacts\bin\runtime\netcoreapp-OSX-Debug-x64
+    #     name: runtime-debug
+    #     type: zip

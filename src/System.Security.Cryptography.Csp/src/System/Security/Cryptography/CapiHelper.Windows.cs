@@ -965,6 +965,30 @@ namespace Internal.NativeCrypto
             return;
         }
 
+        /// <summary>
+        /// Get certificate from container
+        /// </summary>
+        internal static byte[] GetContainerCertificate(
+            SafeKeyHandle safeKeyHandle)
+        {
+            int dwDataLen = 0;
+            bool ret = Interop.Advapi32.CryptGetKeyParam(safeKeyHandle,
+                Interop.Advapi32.CryptGetKeyParamFlags.KP_CERTIFICATE, null, ref dwDataLen, 0);
+            if (!ret)
+            {
+                int err = Marshal.GetLastWin32Error();
+                if (err == GostConstants.SCARD_E_NO_SUCH_CERTIFICATE)
+                    return null;
+                throw new CryptographicException(err);
+            }
+            byte[] data = new byte[dwDataLen];
+            ret = Interop.Advapi32.CryptGetKeyParam(safeKeyHandle,
+                Interop.Advapi32.CryptGetKeyParamFlags.KP_CERTIFICATE, data, ref dwDataLen, 0);
+            if (!ret)
+                throw new CryptographicException(Marshal.GetLastWin32Error());
+            return data;
+        }
+
 
         //---------------------------------------------------------------------------------------
         //

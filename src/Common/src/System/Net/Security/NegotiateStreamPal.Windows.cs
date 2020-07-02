@@ -253,14 +253,14 @@ namespace System.Net.Security
             Debug.Assert(success);
 
             // alloc new output buffer if not supplied or too small
-            int resultSize = count + sizes.cbMaxSignature;
+            int resultSize = count + (int)sizes.cbMaxSignature;
             if (output == null || output.Length < resultSize)
             {
                 output = new byte[resultSize];
             }
 
             // make a copy of user data for in-place encryption
-            Buffer.BlockCopy(buffer, offset, output, sizes.cbMaxSignature, count);
+            Buffer.BlockCopy(buffer, offset, output, (int)sizes.cbMaxSignature, count);
 
             // setup security buffers for ssp call
 #if netstandard
@@ -269,8 +269,8 @@ namespace System.Net.Security
             TwoSecurityBuffers stackBuffer = default;
             Span<SecurityBuffer> securityBuffer = MemoryMarshal.CreateSpan(ref stackBuffer._item0, 2);
 #endif
-            securityBuffer[0] = new SecurityBuffer(output, 0, sizes.cbMaxSignature, SecurityBufferType.SECBUFFER_TOKEN);
-            securityBuffer[1] = new SecurityBuffer(output, sizes.cbMaxSignature, count, SecurityBufferType.SECBUFFER_DATA);
+            securityBuffer[0] = new SecurityBuffer(output, 0, (int)sizes.cbMaxSignature, SecurityBufferType.SECBUFFER_TOKEN);
+            securityBuffer[1] = new SecurityBuffer(output, (int)sizes.cbMaxSignature, count, SecurityBufferType.SECBUFFER_DATA);
 
             // call SSP Function
             int errorCode = SSPIWrapper.MakeSignature(GlobalSSPI.SSPIAuth, securityContext, securityBuffer, 0);

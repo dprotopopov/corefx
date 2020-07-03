@@ -165,6 +165,9 @@
     <Compile Include="$(CommonPath)\Interop\Windows\SChannel\SecPkgContext_CipherInfo.cs">
       <Link>Common\Interop\Windows\SChannel\SecPkgContext_CipherInfo.cs</Link>
     </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\SChannel\Interop.Sec_Application_Protocols.cs">
+      <Link>Common\Interop\Windows\SChannel\Interop.Sec_Application_Protocols.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
   <!-- <ItemGroup Condition=" '$(TargetsWindows)' == 'true'"> -->
@@ -220,9 +223,6 @@
     </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\SChannel\Interop.SecPkgContext_ApplicationProtocol.cs">
       <Link>Common\Interop\Windows\SChannel\Interop.SecPkgContext_ApplicationProtocol.cs</Link>
-    </Compile>
-    <Compile Include="$(CommonPath)\Interop\Windows\SChannel\Interop.Sec_Application_Protocols.cs">
-      <Link>Common\Interop\Windows\SChannel\Interop.Sec_Application_Protocols.cs</Link>
     </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\SChannel\UnmanagedCertificateContext.cs">
       <Link>Common\Interop\Windows\SChannel\UnmanagedCertificateContext.cs</Link>
@@ -287,6 +287,9 @@
     </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\SChannel\SecPkgContext_CipherInfo.cpcsp.cs">
       <Link>Common\Interop\Windows\SChannel\SecPkgContext_CipherInfo.cpcsp.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\SChannel\Interop.Sec_Application_Protocols.cpcsp.cs">
+      <Link>Common\Interop\Windows\SChannel\Interop.Sec_Application_Protocols.cpcsp.cs</Link>
     </Compile>
 <!--     <Compile Include="$(CommonPath)\CoreLib\Interop\Unix\Interop.Errors.cs">
       <Link>Common\CoreLib\Interop\Unix\Interop.Errors.cs</Link>

@@ -105,7 +105,7 @@ namespace Internal.NativeCrypto
                 false, 0, tmpBuffer,
                 ref dwDataLen, (int)bufLength);
             if (!ret)
-                throw new CryptographicException(Marshal.GetLastWin32Error());
+                throw new CryptographicException(Interop.CPError.GetLastWin32Error());
             if (outputBuffer == null)
             {
                 outputBuffer = new byte[dwDataLen];
@@ -143,7 +143,7 @@ namespace Internal.NativeCrypto
                 hKey, SafeHashHandle.InvalidHandle,
                 false, 0, tmpBuffer, ref dwDataLen))
             {
-                throw new CryptographicException(Marshal.GetLastWin32Error());
+                throw new CryptographicException(Interop.CPError.GetLastWin32Error());
             }
             int realLength = (int)dwDataLen; // ebp + 0x34
             if (fDone)
@@ -242,7 +242,7 @@ namespace Internal.NativeCrypto
             }
 
             if (!ret)
-                throw new CryptographicException(Marshal.GetLastWin32Error());
+                throw new CryptographicException(Interop.CPError.GetLastWin32Error());
         }
 
         internal static int GenerateRandomBytes(SafeProvHandle provHandle, byte[] buffer)

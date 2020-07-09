@@ -142,6 +142,9 @@
     <None Include="System\Net\Security\TlsCipherSuiteData.Lookup.tt" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetsWindows)' == 'true'">
+    <Compile Include="$(CommonPath)\Interop\Interop.CPGetLastWin32Error.cs">
+      <Link>Common\Interop\Interop.CPGetLastWin32Error.cs</Link>
+    </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecPkgContext_StreamSizes.cs">
       <Link>Common\Interop\Windows\SspiCli\SecPkgContext_StreamSizes.cs</Link>
     </Compile>
@@ -265,6 +268,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetsUnix)' == 'true' ">
+    <Compile Include="$(CommonPath)\Interop\Interop.CPGetLastWin32Error.Unix.cs">
+      <Link>Common\Interop\Interop.CPGetLastWin32Error.Unix.cs</Link>
+    </Compile>
     <Compile Include="System\Net\CertificateValidationPal.cpcsp.cs" />
     <Compile Include="System\Net\Security\SslStreamPal.SecurityPackageName.cpcsp.cs" />
     <Compile Include="$(CommonPath)\Interop\Windows\SspiCli\SecPkgContext_StreamSizes.Unix.cs">

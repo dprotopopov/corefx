@@ -79,7 +79,7 @@ namespace Internal.Cryptography.Pal.Windows
                 {
                     int cbSize = sizeof(long);
                     if (!Interop.Crypt32.CryptDecodeObject(CryptDecodeObjectStructType.PKCS_UTC_TIME, (IntPtr)pEncodedUtcTime, encodedUtcTime.Length, &signingTime, ref cbSize))
-                        throw Marshal.GetLastWin32Error().ToCryptographicException();
+                        throw Interop.CPError.GetLastWin32Error().ToCryptographicException();
                 }
             }
             return DateTime.FromFileTimeUtc(signingTime);
@@ -103,15 +103,15 @@ namespace Internal.Cryptography.Pal.Windows
             using (SafeCryptMsgHandle hCryptMsg = Interop.Crypt32.CryptMsgOpenToDecode(MsgEncodingType.All, 0, 0, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero))
             {
                 if (hCryptMsg == null || hCryptMsg.IsInvalid)
-                    throw Marshal.GetLastWin32Error().ToCryptographicException();
+                    throw Interop.CPError.GetLastWin32Error().ToCryptographicException();
 
                 if (!Interop.Crypt32.CryptMsgUpdate(hCryptMsg, encodedMessage, encodedMessage.Length, fFinal: true))
-                    throw Marshal.GetLastWin32Error().ToCryptographicException();
+                    throw Interop.CPError.GetLastWin32Error().ToCryptographicException();
 
                 int msgTypeAsInt;
                 int cbSize = sizeof(int);
                 if (!Interop.Crypt32.CryptMsgGetParam(hCryptMsg, CryptMsgParamType.CMSG_TYPE_PARAM, 0, out msgTypeAsInt, ref cbSize))
-                    throw Marshal.GetLastWin32Error().ToCryptographicException();
+                    throw Interop.CPError.GetLastWin32Error().ToCryptographicException();
 
                 CryptMsgType msgType = (CryptMsgType)msgTypeAsInt;
 
@@ -324,7 +324,7 @@ namespace Internal.Cryptography.Pal.Windows
                     out keySpec,
                     out mustFree))
                 {
-                    exception = Marshal.GetHRForLastWin32Error().ToCryptographicException();
+                    exception = Interop.CPError.GetHRForLastWin32Error().ToCryptographicException();
                     return null;
                 }
 

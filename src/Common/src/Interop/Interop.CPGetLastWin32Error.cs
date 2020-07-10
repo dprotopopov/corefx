@@ -12,7 +12,7 @@ internal partial class Interop
         public static int GetLastWin32Error()
         {
             return Marshal.GetLastWin32Error();
-        };
+        }
 
         public static int GetHRForLastWin32Error()
         {

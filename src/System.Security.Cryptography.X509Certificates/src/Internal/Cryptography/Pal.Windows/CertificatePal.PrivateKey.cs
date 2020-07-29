@@ -237,7 +237,7 @@ namespace Internal.Cryptography.Pal
                 }
                 default:
                 {
-                    return;
+                    throw new PlatformNotSupportedException();
                 }
             }
 

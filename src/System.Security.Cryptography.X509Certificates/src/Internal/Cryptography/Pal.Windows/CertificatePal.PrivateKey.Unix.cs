@@ -59,6 +59,41 @@ namespace Internal.Cryptography.Pal
                 }
             }
         }
+
+        private unsafe ICertificatePal CopyWithPersistedCapiKey(CspKeyContainerInfo keyContainerInfo)
+        {
+            if (string.IsNullOrEmpty(keyContainerInfo.KeyContainerName))
+            {
+                return null;
+            }
+
+            // Make a new pal from bytes.
+            CertificatePal pal = (CertificatePal)FromBlob(RawData, SafePasswordHandle.InvalidHandle, X509KeyStorageFlags.PersistKeySet);
+            CRYPT_KEY_PROV_INFO keyProvInfo = new CRYPT_KEY_PROV_INFO();
+
+            fixed (byte* keyName = Encoding.UTF32.GetBytes(keyContainerInfo.KeyContainerName))
+            fixed (byte* provName = Encoding.UTF32.GetBytes(keyContainerInfo.ProviderName))
+            {
+                keyProvInfo.pwszContainerName = (char*)keyName;
+                keyProvInfo.pwszProvName = (char*)provName;
+                keyProvInfo.dwFlags = keyContainerInfo.MachineKeyStore ? CryptAcquireContextFlags.CRYPT_MACHINE_KEYSET : 0;
+                keyProvInfo.dwProvType = keyContainerInfo.ProviderType;
+                keyProvInfo.dwKeySpec = (int)keyContainerInfo.KeyNumber;
+
+                if (!Interop.crypt32.CertSetCertificateContextProperty(
+                    pal._certContext,
+                    CertContextPropId.CERT_KEY_PROV_INFO_PROP_ID,
+                    CertSetPropertyFlags.None,
+                    &keyProvInfo))
+                {
+                    pal.Dispose();
+                    throw Marshal.GetLastWin32Error().ToCryptographicException();
+                }
+            }
+
+            return pal;
+        }
+
         private unsafe string pwszToString(IntPtr pwszName)
         {
             if (pwszName == IntPtr.Zero)

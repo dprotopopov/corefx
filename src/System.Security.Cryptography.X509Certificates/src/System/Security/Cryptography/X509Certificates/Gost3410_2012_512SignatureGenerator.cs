@@ -33,7 +33,7 @@ namespace System.Security.Cryptography.X509Certificates
             using (AsnWriter writer = new AsnWriter(AsnEncodingRules.DER))
             {
                 writer.PushSequence();
-                writer.WriteObjectIdentifier(Oids.Gost3410EL);
+                writer.WriteObjectIdentifier(Oids.Gost3410_2012_512);
                 writer.PopSequence();
                 return writer.Encode();
             }

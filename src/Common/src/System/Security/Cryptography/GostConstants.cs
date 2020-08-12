@@ -39,7 +39,7 @@
         /// </summary>
         internal const string OID_CP_GOST_R3410EL = "1.2.643.2.2.19";
         /// <summary>
-        /// /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2001 (используется как SignatureAlgorithm в сертификате)
+        /// OID алгоритма цифровой подписи ГОСТ Р 34.10-2001 (используется как SignatureAlgorithm в сертификате)
         /// </summary>
         internal const string OID_CP_GOST_R3411_R3410EL = "1.2.643.2.2.3";
         /// <summary>

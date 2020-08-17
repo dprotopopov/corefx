@@ -264,6 +264,9 @@
     <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\Interop.CryptAcquireContext.cs">
       <Link>Common\Interop\Windows\Advapi32\Interop.CryptAcquireContext.cs</Link>
     </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\Interop.CryptContextAddRef.cs">
+      <Link>Common\Interop\Windows\Advapi32\Interop.CryptContextAddRef.cs</Link>
+    </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\Interop.CryptCreateHash.cs">
       <Link>Common\Interop\Windows\Advapi32\Interop.CryptCreateHash.cs</Link>
     </Compile>
@@ -333,6 +336,7 @@
     <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\SafeProvHandle.cs">
       <Link>Common\Interop\Windows\Advapi32\SafeProvHandle.cs</Link>
     </Compile>
+    <Compile Remove="C:\_self\git\corefx\src\Common\src\Interop\Windows\Advapi32\SafeSetProvHandle.cs" />
     <Compile Include="$(CommonPath)\Interop\Windows\Crypt32\Interop.FindOidInfo.cs">
       <Link>Common\Interop\Windows\Crypt32\Interop.FindOidInfo.cs</Link>
     </Compile>

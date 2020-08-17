@@ -309,6 +309,7 @@ namespace System.Security.Cryptography
         public static bool UseMachineKeyStore { get { throw null; } set { } }
         public Gost3410CryptoServiceProvider() { throw null; }
         public Gost3410CryptoServiceProvider(CspParameters parameters) { throw null; }
+        public Gost3410CryptoServiceProvider(IntPtr hProvHandle, int keySpec) { throw null; }
         public bool VerifyHash(byte[] hash, byte[] signature) { throw null; }
         public override bool VerifyHash(byte[] hash, byte[] signature, HashAlgorithmName hashAlgName) { throw null; }
 
@@ -335,6 +336,7 @@ namespace System.Security.Cryptography
         public static bool UseMachineKeyStore { get { throw null; } set { } }
         public Gost3410_2012_256CryptoServiceProvider() { throw null; }
         public Gost3410_2012_256CryptoServiceProvider(CspParameters parameters) { throw null; }
+        public Gost3410_2012_256CryptoServiceProvider(IntPtr hProvHandle, int keySpec) { throw null; }
         public bool VerifyHash(byte[] hash, byte[] signature) { throw null; }
         public override bool VerifyHash(byte[] hash, byte[] signature, HashAlgorithmName hashAlgName) { throw null; }
 
@@ -361,6 +363,7 @@ namespace System.Security.Cryptography
         public static bool UseMachineKeyStore { get { throw null; } set { } }
         public Gost3410_2012_512CryptoServiceProvider() { throw null; }
         public Gost3410_2012_512CryptoServiceProvider(CspParameters parameters) { throw null; }
+        public Gost3410_2012_512CryptoServiceProvider(IntPtr hProvHandle, int keySpec) { throw null; }
         public bool VerifyHash(byte[] hash, byte[] signature) { throw null; }
         public override bool VerifyHash(byte[] hash, byte[] signature, HashAlgorithmName hashAlgName) { throw null; }
 

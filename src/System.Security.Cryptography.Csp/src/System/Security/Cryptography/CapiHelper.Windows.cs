@@ -123,9 +123,9 @@ namespace Internal.NativeCrypto
             uint dwFlags = (uint)Interop.Advapi32.CryptAcquireContextFlags.CRYPT_NEWKEYSET;
             switch (parameters.ProviderType)
             {
-                case (int)CspAlgorithmType.PROV_GOST_2001_DH:
-                case (int)CspAlgorithmType.PROV_GOST_2012_256:
-                case (int)CspAlgorithmType.PROV_GOST_2012_512:
+                case (int)CspAlgorithmType.Gost2001:
+                case (int)CspAlgorithmType.Gost2012_256:
+                case (int)CspAlgorithmType.Gost2012_512:
                 {
                     // Gost does not support creating and using new keys in CRYPT_VERIFYCONTEXT
                     break;
@@ -719,9 +719,9 @@ namespace Internal.NativeCrypto
                     case CspAlgorithmType.Dss:
                         userParameters.ProviderType = DefaultDssProviderType;
                         break;
-                    case CspAlgorithmType.PROV_GOST_2001_DH:
-                    case CspAlgorithmType.PROV_GOST_2012_256:
-                    case CspAlgorithmType.PROV_GOST_2012_512:
+                    case CspAlgorithmType.Gost2001:
+                    case CspAlgorithmType.Gost2012_256:
+                    case CspAlgorithmType.Gost2012_512:
                         userParameters.ProviderType = (int)keyType;
                         break;
                     case CspAlgorithmType.Rsa:
@@ -740,9 +740,9 @@ namespace Internal.NativeCrypto
                     case CspAlgorithmType.Dss:
                         parameters = new CspParameters(DefaultDssProviderType, null, null, defaultFlags);
                         break;
-                    case CspAlgorithmType.PROV_GOST_2001_DH:
-                    case CspAlgorithmType.PROV_GOST_2012_256:
-                    case CspAlgorithmType.PROV_GOST_2012_512:
+                    case CspAlgorithmType.Gost2001:
+                    case CspAlgorithmType.Gost2012_256:
+                    case CspAlgorithmType.Gost2012_512:
                         parameters = new CspParameters((int) keyType, null, null, defaultFlags);
                         break;
                     case CspAlgorithmType.Rsa:
@@ -768,8 +768,8 @@ namespace Internal.NativeCrypto
             else if (parameters.KeyNumber == CALG_DSS_SIGN || 
                      parameters.KeyNumber == CALG_RSA_SIGN ||
                      parameters.KeyNumber == GostConstants.CALG_GR3410EL ||
-                     parameters.KeyNumber == GostConstants.CALG_GR3410_2012_256 ||
-                     parameters.KeyNumber == GostConstants.CALG_GR3410_2012_256)
+                     parameters.KeyNumber == GostConstants.CALG_GR3410_12_256 ||
+                     parameters.KeyNumber == GostConstants.CALG_GR3410_12_256)
             {
                 parameters.KeyNumber = (int)KeyNumber.Signature;
             }
@@ -791,9 +791,9 @@ namespace Internal.NativeCrypto
                 // add: gost
                 switch (parameters.ProviderType)
                 {
-                    case (int)CspAlgorithmType.PROV_GOST_2001_DH:
-                    case (int)CspAlgorithmType.PROV_GOST_2012_256:
-                    case (int)CspAlgorithmType.PROV_GOST_2012_512:
+                    case (int)CspAlgorithmType.Gost2001:
+                    case (int)CspAlgorithmType.Gost2012_256:
+                    case (int)CspAlgorithmType.Gost2012_512:
                     {
                         parameters.KeyContainerName = GetRandomKeyContainer();
                         break;
@@ -868,6 +868,73 @@ namespace Internal.NativeCrypto
                 throw new CryptographicException(SR.Format(SR.Cryptography_CSP_WrongKeySpec, Convert.ToString(keyType)));
             }
 
+            return hKey;
+        }
+
+        internal static SafeKeyHandle GetKeyPairHelper(
+            CspAlgorithmType keyType,
+            int keyNumber,
+            int dwKeySize,
+            SafeProvHandle safeProvHandle)
+        {
+            SafeProvHandle hProv = null;
+            SafeKeyHandle hKey = SafeKeyHandle.InvalidHandle;
+            try
+            {
+                hProv = safeProvHandle;
+
+                int err1 = CapiHelper.GetUserKey(
+                    hProv,
+                    keyNumber,
+                    out hKey);
+                if (err1 != 0)
+                {
+                    throw new CryptographicException(err1);
+                }
+
+                byte[] buffer1 = CapiHelper.GetKeyParameter(
+                    hKey,
+                    Constants.CLR_ALGID);
+                int algid = ((buffer1[0] | (buffer1[1] << 8)) |
+                    (buffer1[2] << 0x10)) | (buffer1[3] << 0x18);
+
+                // Допускаем только 2001 и 2012 и только подпись или шифрование.
+                switch (keyType)
+                {
+                    case CspAlgorithmType.Gost2001:
+                        if ((algid != GostConstants.CALG_DH_EL_SF
+                            && algid != GostConstants.CALG_GR3410EL))
+                        {
+                            throw new CryptographicException(SR.Format(SR.Cryptography_CSP_WrongKeySpec, Convert.ToString(keyType)));
+                        }
+                        break;
+                    case CspAlgorithmType.Gost2012_256:
+                        if ((algid != GostConstants.CALG_DH_GR3410_12_256_SF
+                            && algid != GostConstants.CALG_GR3410_12_256))
+                        {
+                            throw new CryptographicException(SR.Format(SR.Cryptography_CSP_WrongKeySpec, Convert.ToString(keyType)));
+                        }
+                        break;
+                    case CspAlgorithmType.Gost2012_512:
+                        if ((algid != GostConstants.CALG_DH_GR3410_12_512_SF
+                            && algid != GostConstants.CALG_GR3410_12_512))
+                        {
+                            throw new CryptographicException(SR.Format(SR.Cryptography_CSP_WrongKeySpec, Convert.ToString(keyType)));
+                        }
+                        break;
+                    default:
+                        throw new CryptographicException(SR.Format(SR.Cryptography_CSP_WrongKeySpec, Convert.ToString(keyType)));
+                }
+            }
+            catch (Exception)
+            {
+                if (hProv != null)
+                    hProv.Close();
+                if (hKey != null)
+                    hKey.Close();
+                throw;
+            }
+            safeProvHandle = hProv;
             return hKey;
         }
 
@@ -1875,9 +1942,9 @@ namespace Internal.NativeCrypto
         {
             Rsa = 0,
             Dss = 1,
-            PROV_GOST_2001_DH = GostConstants.PROV_GOST_2001_DH,
-            PROV_GOST_2012_256 = GostConstants.PROV_GOST_2012_256,
-            PROV_GOST_2012_512 = GostConstants.PROV_GOST_2012_512
+            Gost2001 = GostConstants.PROV_GOST_2001_DH,
+            Gost2012_256 = GostConstants.PROV_GOST_2012_256,
+            Gost2012_512 = GostConstants.PROV_GOST_2012_512
         }
 
         [Flags]

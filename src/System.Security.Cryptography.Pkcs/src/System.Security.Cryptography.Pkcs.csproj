@@ -148,6 +148,9 @@
     <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\Interop.CryptAcquireContext.cs">
       <Link>Common\Interop\Windows\Advapi32\Interop.CryptAcquireContext.cs</Link>
     </Compile>
+    <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\Interop.CryptContextAddRef.cs">
+      <Link>Common\Interop\Windows\Advapi32\Interop.CryptContextAddRef.cs</Link>
+    </Compile>
     <Compile Include="$(CommonPath)\Interop\Windows\Advapi32\Interop.CryptDestroyHash.cs">
       <Link>Common\Interop\Windows\Advapi32\Interop.CryptDestroyHash.cs</Link>
     </Compile>

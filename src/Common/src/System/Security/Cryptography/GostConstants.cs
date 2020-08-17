@@ -135,8 +135,8 @@
         internal const int CALG_GR3411_2012_256 = (int)0x8021;
         internal const int CALG_GR3411_2012_512 = (int)0x8022;
         internal const int CALG_GR3410EL = 0x2e23;
-        internal const int CALG_GR3410_2012_256 = 0x2e49;
-        internal const int CALG_GR3410_2012_512 = 0x2e3d;
+        internal const int CALG_GR3410_12_256 = 0x2e49;
+        internal const int CALG_GR3410_12_512 = 0x2e3d;
         internal const int CALG_G28147 = 0x661e;
         internal const int CALG_G28147_IMIT = 0x801f;
         internal const int CALG_SYMMETRIC_512 = 0x6622;

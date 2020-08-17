@@ -80,6 +80,10 @@ namespace Internal.Cryptography.Pal
                 delegate (CngKey cngKey)
                 {
                     throw new NotSupportedException("CNG Gost3410 keys are not supported.");//(SR.NotSupported_Gost3410_Cng); 
+                },
+                delegate (IntPtr hProvHandle, int keySpec)
+                {
+                    return new Gost3410CryptoServiceProvider(hProvHandle, keySpec);
                 }
             );
         }
@@ -95,6 +99,10 @@ namespace Internal.Cryptography.Pal
                 delegate (CngKey cngKey)
                 {
                     throw new NotSupportedException("CNG Gost3410 keys are not supported.");//(SR.NotSupported_Gost3410_Cng); 
+                },
+                delegate (IntPtr hProvHandle, int keySpec)
+                {
+                    return new Gost3410_2012_256CryptoServiceProvider(hProvHandle, keySpec);
                 }
             );
         }
@@ -110,6 +118,10 @@ namespace Internal.Cryptography.Pal
                 delegate (CngKey cngKey)
                 {
                     throw new NotSupportedException("CNG Gost3410 keys are not supported.");//(SR.NotSupported_Gost3410_Cng); 
+                },
+                delegate (IntPtr hProvHandle, int keySpec)
+                {
+                    return new Gost3410_2012_512CryptoServiceProvider(hProvHandle, keySpec);
                 }
             );
         }
@@ -313,7 +325,7 @@ namespace Internal.Cryptography.Pal
             }
         }
 
-        private T GetPrivateKey<T>(Func<CspParameters, T> createCsp, Func<CngKey, T> createCng) where T : AsymmetricAlgorithm
+        private T GetPrivateKey<T>(Func<CspParameters, T> createCsp, Func<CngKey, T> createCng, Func<IntPtr, int, T> createNoPersistCsp = null) where T : AsymmetricAlgorithm
         {
             CngKeyHandleOpenOptions cngHandleOptions;
             SafeNCryptKeyHandle ncryptKey = TryAcquireCngPrivateKey(CertContext, out cngHandleOptions);
@@ -322,10 +334,19 @@ namespace Internal.Cryptography.Pal
                 CngKey cngKey = CngKey.Open(ncryptKey, cngHandleOptions);
                 return createCng(cngKey);
             }
- 
+
+            if (createNoPersistCsp != null)
+            {
+                var (hProv, keySpec) = GetNonPersistPrivateKeyCsp();
+                if (hProv != IntPtr.Zero)
+                {
+                    return createNoPersistCsp(hProv, keySpec);
+                }
+            }
+
             CspParameters cspParameters = GetPrivateKeyCsp();
             if (cspParameters == null)
-                return null;
+                    return null;
 
             if (cspParameters.ProviderType == 0)
             {

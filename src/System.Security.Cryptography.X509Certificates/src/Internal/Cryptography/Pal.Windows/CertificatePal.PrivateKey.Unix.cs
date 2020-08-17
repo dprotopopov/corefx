@@ -59,6 +59,37 @@ namespace Internal.Cryptography.Pal
                 }
             }
         }
+		
+		// begin: gost
+        /// <summary>
+        /// Get non-persistant certificate private key from CERT_KEY_PROV_INFO_PROP_ID
+        /// </summary>
+        /// <returns></returns>
+        private (IntPtr hprov, int keySpec) GetNonPersistPrivateKeyCsp()
+        {
+            int cbData = 0;
+
+            if (!Interop.crypt32.CertGetCertificateContextProperty(_certContext, CertContextPropId.CERT_KEY_PROV_INFO_PROP_ID, null, ref cbData))
+            {
+                int dwErrorCode = Marshal.GetLastWin32Error();
+                if (dwErrorCode == ErrorCode.CRYPT_E_NOT_FOUND)
+                    return (IntPtr.Zero, 0);
+                throw dwErrorCode.ToCryptographicException();
+            }
+            unsafe
+            {
+                byte[] privateKey = new byte[cbData];
+                fixed (byte* pPrivateKey = privateKey)
+                {
+                    if (!Interop.crypt32.CertGetCertificateContextProperty(_certContext, CertContextPropId.CERT_KEY_CONTEXT_PROP_ID, privateKey, ref cbData))
+                        throw Marshal.GetLastWin32Error().ToCryptographicException();
+                    CERT_KEY_CONTEXT* pKeyProvInfo = (CERT_KEY_CONTEXT*)pPrivateKey;
+
+                    return (pKeyProvInfo->hCryptProv, (int)pKeyProvInfo->dwKeySpec);
+                }
+            }
+        }
+        // end: gost
 
         private unsafe ICertificatePal CopyWithPersistedCapiKey(CspKeyContainerInfo keyContainerInfo)
         {

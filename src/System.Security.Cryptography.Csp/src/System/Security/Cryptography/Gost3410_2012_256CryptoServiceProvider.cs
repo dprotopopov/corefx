@@ -149,7 +149,7 @@ namespace System.Security.Cryptography
         public Gost3410_2012_256CryptoServiceProvider(CspParameters parameters)
         {
             _parameters = CapiHelper.SaveCspParameters(
-                CapiHelper.CspAlgorithmType.PROV_GOST_2012_256,
+                CapiHelper.CspAlgorithmType.Gost2012_256,
                 parameters,
                 s_useMachineKeyStore,
                 out _randomKeyContainer);
@@ -158,6 +158,22 @@ namespace System.Security.Cryptography
 
             _hashImpl = Gost3411_2012_256.Create();
             if (!_randomKeyContainer) GetKeyPair();
+        }
+
+        [SecuritySafeCritical]
+        public Gost3410_2012_256CryptoServiceProvider(IntPtr hProvHandle, int keySpec)
+        {
+            _safeProvHandle = new SafeProvHandle(hProvHandle, true);
+            _keySpec = keySpec;
+
+            LegalKeySizesValue = new KeySizes[] { new KeySizes(
+                GostConstants.GOST3410_2012_256KEY_SIZE, GostConstants.GOST3410_2012_256KEY_SIZE,  0) };
+            _safeKeyHandle = CapiHelper.GetKeyPairHelper(
+                            CspAlgorithmType.Gost2012_256,
+                            keySpec,
+                            GostConstants.GOST3410_2012_256KEY_SIZE, 
+                            _safeProvHandle);
+            _hashImpl = Gost3411_2012_256.Create();
         }
 
         protected override byte[] HashData(Stream data, HashAlgorithmName hashAlgorithm)
@@ -568,7 +584,7 @@ namespace System.Security.Cryptography
             }
 
             byte[] data = ExportCspBlob(false);
-            DecodePublicBlob(obj1, data, CspAlgorithmType.PROV_GOST_2012_256);
+            DecodePublicBlob(obj1, data, CspAlgorithmType.Gost2012_256);
 
             return obj1.Parameters;
 
@@ -621,7 +637,7 @@ namespace System.Security.Cryptography
                 var safeProvHandleTemp = AcquireSafeProviderHandle();
                 if (pubKey == null) throw new ArgumentNullException(nameof(pubKey));
 
-                byte[] keyBlob = EncodePublicBlob(pubKey, CspAlgorithmType.PROV_GOST_2012_256);
+                byte[] keyBlob = EncodePublicBlob(pubKey, CspAlgorithmType.Gost2012_256);
                 CapiHelper.ImportKeyBlob(
                     safeProvHandleTemp,
                     CspProviderFlags.NoFlags,
@@ -797,7 +813,7 @@ namespace System.Security.Cryptography
                         if (_safeKeyHandle == null)
                         {
                             SafeKeyHandle hKey = CapiHelper.GetKeyPairHelper(
-                                CapiHelper.CspAlgorithmType.PROV_GOST_2012_256,
+                                CapiHelper.CspAlgorithmType.Gost2012_256,
                                 _parameters,
                                 GostConstants.GOST3410_2012_256KEY_SIZE,
                                 SafeProvHandle);

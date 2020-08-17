@@ -516,6 +516,9 @@ namespace System.Security.Cryptography.X509Certificates
         UserProtected = 8,
         PersistKeySet = 16,
         EphemeralKeySet = 32,
+        // begin: gost
+        CspNoPersistKeySet = 128,
+        // end: gost
     }
     public sealed partial class X509KeyUsageExtension : System.Security.Cryptography.X509Certificates.X509Extension
     {

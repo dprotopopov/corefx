@@ -186,6 +186,12 @@ namespace Internal.Cryptography.Pal
             if ((keyStorageFlags & X509KeyStorageFlags.EphemeralKeySet) == X509KeyStorageFlags.EphemeralKeySet)
                 dwFlags |= PfxCertStoreFlags.PKCS12_NO_PERSIST_KEY | PfxCertStoreFlags.PKCS12_ALWAYS_CNG_KSP;
 
+            // begin: gost
+            // Allows to import pfx without csp windows
+            if ((keyStorageFlags & X509KeyStorageFlags.CspNoPersistKeySet) == X509KeyStorageFlags.CspNoPersistKeySet)
+                dwFlags |= PfxCertStoreFlags.PKCS12_NO_PERSIST_KEY | PfxCertStoreFlags.CRYPT_EXPORTABLE;
+            // end: gost
+
             return dwFlags;
         }
 

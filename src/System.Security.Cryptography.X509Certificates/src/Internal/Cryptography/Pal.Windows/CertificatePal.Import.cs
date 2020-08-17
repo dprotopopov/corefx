@@ -90,7 +90,10 @@ namespace Internal.Cryptography.Pal
                         // If PersistKeySet is set we don't delete the key, so that it persists.
                         // If EphemeralKeySet is set we don't delete the key, because there's no file, so it's a wasteful call.
                         const X509KeyStorageFlags DeleteUnless =
-                            X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.EphemeralKeySet;
+                            X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.EphemeralKeySet |
+                            // begin: gost
+                            X509KeyStorageFlags.CspNoPersistKeySet;
+                            // end gost
 
                         deleteKeyContainer = ((keyStorageFlags & DeleteUnless) == 0);
                     }
@@ -232,6 +235,12 @@ namespace Internal.Cryptography.Pal
             // complexity of pointer interpretation.
             if ((keyStorageFlags & X509KeyStorageFlags.EphemeralKeySet) == X509KeyStorageFlags.EphemeralKeySet)
                 pfxCertStoreFlags |= PfxCertStoreFlags.PKCS12_NO_PERSIST_KEY | PfxCertStoreFlags.PKCS12_ALWAYS_CNG_KSP;
+
+            // begin: gost
+            // Allows to import pfx without csp windows
+            if ((keyStorageFlags & X509KeyStorageFlags.CspNoPersistKeySet) == X509KeyStorageFlags.CspNoPersistKeySet)
+                pfxCertStoreFlags |= PfxCertStoreFlags.PKCS12_NO_PERSIST_KEY | PfxCertStoreFlags.CRYPT_EXPORTABLE;
+            // end: gost
 
             // In the full .NET Framework loading a PFX then adding the key to the Windows Certificate Store would
             // enable a native application compiled against CAPI to find that private key and interoperate with it.

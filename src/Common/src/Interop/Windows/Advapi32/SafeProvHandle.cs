@@ -38,19 +38,11 @@ namespace System.Security.Cryptography
                 SetHandle(handle);
                 return;
             }
-            bool ret = false;
-            int hr = 0;
-            RuntimeHelpers.PrepareConstrainedRegions();
-            try
-            {
-            }
-            finally
-            {
-                ret = Interop.Advapi32.CryptContextAddRef(handle, null, 0);
-                hr = Marshal.GetLastWin32Error();
-                if (ret)
-                    SetHandle(handle);
-            }
+
+            bool ret = Interop.Advapi32.CryptContextAddRef(handle, null, 0);
+            int hr = Marshal.GetLastWin32Error();
+            if (ret)
+                SetHandle(handle);
             if (!ret)
                 throw new CryptographicException(hr);
 

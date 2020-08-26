@@ -23,7 +23,7 @@ namespace Microsoft.Win32.SafeHandles
 
         private void FreeHandle()
         {
-            Marshal.FreeHGlobal(s);
+            Marshal.FreeHGlobal(handle);
             // Marshal.ZeroFreeGlobalAllocAnsi(handle);
         }
 
@@ -45,7 +45,7 @@ namespace Microsoft.Win32.SafeHandles
                 throw new ArgumentOutOfRangeException(nameof(s));
             }
 
-            IntPtr hglobal = Marshal.   AllocHGlobal((IntPtr)nb);
+            IntPtr hglobal = Marshal.AllocHGlobal((IntPtr)nb);
 
             StringToUTF32String(s, (byte*)hglobal, nb);
             return hglobal;

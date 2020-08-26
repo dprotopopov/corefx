@@ -11,26 +11,59 @@ namespace Microsoft.Win32.SafeHandles
 {
     internal partial class SafePasswordHandle
     {
+        const int size_of_wchar_t = 4;
+        int curr_len = 0;
         private IntPtr CreateHandle(string password)
         {
             return StringToHGlobalUTF32(password);
+            // return StringToHGlobalAnsi(password);
         }
 
         private IntPtr CreateHandle(SecureString password)
         {
-            return Marshal.SecureStringToGlobalAllocAnsi(password);
+            if (password is null)
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
+            IntPtr dest = Marshal.AllocHGlobal(password.Length * 4);
+            IntPtr src = Marshal.SecureStringToGlobalAllocUnicode(password);
+            // We don't want to copy SecureString to managed memory so 
+            // manualy convert windows 2 byte wchar to unix 4 byte wchar
+            unsafe
+                {
+                    byte* s = (byte*)src;
+                    byte* d = (byte*)dest;
+                    for (int i = 0; i < password.Length; i++)
+                    {
+                        d[4*i] = s[2*i];
+                        d[4 * i + 1] = s[2 * i + 1];
+                        d[4 * i + 2] = 0;
+                        d[4 * i + 3] = 0;
+                    }
+                }
+            Marshal.FreeHGlobal(src);
+            curr_len = password.Length * size_of_wchar_t;
+            return dest;
+            // return Marshal.SecureStringToGlobalAllocAnsi(password);
         }
 
         private void FreeHandle()
         {
+            //Manualy zerro buffer with secure data
+            unsafe
+            {
+                byte* b = (byte*)handle;
+                for (int i = 0; i < curr_len; i++){
+                    b[i] = 0;
+                }
+            }
             Marshal.FreeHGlobal(handle);
             // Marshal.ZeroFreeGlobalAllocAnsi(handle);
         }
 
         //Copy from Masrshal package with modification to support UTF32
-        private static unsafe IntPtr StringToHGlobalUTF32(string s)
+        private unsafe IntPtr StringToHGlobalUTF32(string s)
         {
-            int size_of_wchar_t = 4;
             if (s is null)
             {
                 return IntPtr.Zero;
@@ -48,6 +81,7 @@ namespace Microsoft.Win32.SafeHandles
             IntPtr hglobal = Marshal.AllocHGlobal((IntPtr)nb);
 
             StringToUTF32String(s, (byte*)hglobal, nb);
+            curr_len = nb;
             return hglobal;
         }
 
@@ -60,7 +94,9 @@ namespace Microsoft.Win32.SafeHandles
             }
 
             buffer[convertedBytes] = 0;
-
+            buffer[convertedBytes + 1] = 0;
+            buffer[convertedBytes + 2] = 0;
+            buffer[convertedBytes + 3] = 0;
             return convertedBytes;
         }
     }

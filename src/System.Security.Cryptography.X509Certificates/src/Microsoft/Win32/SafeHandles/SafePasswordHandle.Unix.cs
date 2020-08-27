@@ -25,7 +25,7 @@ namespace Microsoft.Win32.SafeHandles
             {
                 throw new ArgumentNullException(nameof(password));
             }
-            IntPtr dest = Marshal.AllocHGlobal(password.Length * 4);
+            IntPtr dest = Marshal.AllocHGlobal((password.Length + 1)* size_of_wchar_t);
             IntPtr src = Marshal.SecureStringToGlobalAllocUnicode(password);
             // We don't want to copy SecureString to managed memory so 
             // manualy convert windows 2 byte wchar to unix 4 byte wchar
@@ -40,6 +40,11 @@ namespace Microsoft.Win32.SafeHandles
                         d[4 * i + 2] = 0;
                         d[4 * i + 3] = 0;
                     }
+                    //Final zero
+                    d[4 * password.Length] = 0;
+                    d[4 * password.Length + 1] = 0;
+                    d[4 * password.Length + 2] = 0;
+                    d[4 * password.Length + 3] = 0;
                 }
             Marshal.FreeHGlobal(src);
             curr_len = password.Length * size_of_wchar_t;

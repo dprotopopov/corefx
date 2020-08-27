@@ -118,7 +118,7 @@ namespace Internal.Cryptography.Pal
                     &keyProvInfo))
                 {
                     pal.Dispose();
-                    throw Marshal.GetLastWin32Error().ToCryptographicException();
+                    throw Interop.CPError.GetHRForLastWin32Error().ToCryptographicException();
                 }
             }
 

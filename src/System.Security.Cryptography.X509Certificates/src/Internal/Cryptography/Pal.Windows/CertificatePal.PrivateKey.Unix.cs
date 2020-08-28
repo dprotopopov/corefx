@@ -62,14 +62,14 @@ namespace Internal.Cryptography.Pal
 		
 		// begin: gost
         /// <summary>
-        /// Get non-persistant certificate private key from CERT_KEY_PROV_INFO_PROP_ID
+        /// Get non-persistant certificate private key from CERT_KEY_CONTEXT_PROP_ID
         /// </summary>
         /// <returns></returns>
         private (IntPtr hprov, int keySpec) GetNonPersistPrivateKeyCsp()
         {
             int cbData = 0;
 
-            if (!Interop.crypt32.CertGetCertificateContextProperty(_certContext, CertContextPropId.CERT_KEY_PROV_INFO_PROP_ID, null, ref cbData))
+            if (!Interop.crypt32.CertGetCertificateContextProperty(_certContext, CertContextPropId.CERT_KEY_CONTEXT_PROP_ID, null, ref cbData))
             {
                 int dwErrorCode = Interop.CPError.GetLastWin32Error();;
                 if (dwErrorCode == ErrorCode.CRYPT_E_NOT_FOUND)

@@ -67,26 +67,26 @@ namespace System.Security.Cryptography.X509Certificates.Tests
             }
         }
 
-        [Fact]
-        public static void ImportGostPfxFromFileWithNonPersistKey()
-        {
-            var path = "cert.pfx";
-            File.WriteAllBytes(path, GostPfxTests.Gost2012_256Pfx);
+        //[Fact]
+        //public static void ImportGostPfxFromFileWithNonPersistKey()
+        //{
+        //    var path = "cert.pfx";
+        //    File.WriteAllBytes(path, GostPfxTests.Gost2012_256Pfx);
 
-            using (var certificate = new X509Certificate2(
-                path,
-                "1",
-                X509KeyStorageFlags.CspNoPersistKeySet))
-            {
-                var dataToBeSigned = new byte[] { 0 };
-                var privateKey = certificate.PrivateKey as Gost3410_2012_256CryptoServiceProvider;
-                var publicKey = certificate.PublicKey.Key as Gost3410_2012_256CryptoServiceProvider;
+        //    using (var certificate = new X509Certificate2(
+        //        path,
+        //        "1",
+        //        X509KeyStorageFlags.CspNoPersistKeySet))
+        //    {
+        //        var dataToBeSigned = new byte[] { 0 };
+        //        var privateKey = certificate.PrivateKey as Gost3410_2012_256CryptoServiceProvider;
+        //        var publicKey = certificate.PublicKey.Key as Gost3410_2012_256CryptoServiceProvider;
 
-                var signature = privateKey.SignData(dataToBeSigned, HashAlgorithmName.Gost3411_2012_256);
-                var result = publicKey.VerifyData(dataToBeSigned, signature, HashAlgorithmName.Gost3411_2012_256);
+        //        var signature = privateKey.SignData(dataToBeSigned, HashAlgorithmName.Gost3411_2012_256);
+        //        var result = publicKey.VerifyData(dataToBeSigned, signature, HashAlgorithmName.Gost3411_2012_256);
 
-                Assert.True(result);
-            }
-        }
+        //        Assert.True(result);
+        //    }
+        //}
     }
 }

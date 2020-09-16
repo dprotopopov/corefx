@@ -246,27 +246,46 @@ namespace Internal.Cryptography.Pal.Windows
                 // 2) Re-implement {R|D}SACryptoServiceProvider
                 // 3) PNSE.
                 // 4) Defer to cert.Get{R|D}SAPrivateKey if not silent, throw otherwise.
-                CspParameters cspParams = handle.GetProvParameters();
-                Debug.Assert((cspParams.Flags & CspProviderFlags.UseExistingKey) != 0);
-                cspParams.KeyNumber = (int)keySpec;
+                CspParameters cspParams;
 
-                if (silent)
+                try
                 {
-                    cspParams.Flags |= CspProviderFlags.NoPrompt;
+                    cspParams = handle.GetProvParameters();
                 }
+                catch (CryptographicException)
+                {
+                    // begin: gost
+                    // - если пытаемся загрузить сертификат в non-persist попадём сюда
+                    // зовём функции x509, которые умеют работать с такими ключами
+                    if (typeof(T) == typeof(Gost3410))
+                        return (T)(object)certificate.GetGost3410PrivateKey();
+                    if (typeof(T) == typeof(Gost3410_2012_256))
+                        return (T)(object)certificate.GetGost3410_2012_256PrivateKey();
+                    if (typeof(T) == typeof(Gost3410_2012_512))
+                        return (T)(object)certificate.GetGost3410_2012_512PrivateKey();
+                    throw;
+                    // end: gost
+                }
+                Debug.Assert((cspParams.Flags & CspProviderFlags.UseExistingKey) != 0);
+                    cspParams.KeyNumber = (int)keySpec;
 
-                if (typeof(T) == typeof(RSA))
-                    return (T)(object)new RSACryptoServiceProvider(cspParams);
-                if (typeof(T) == typeof(DSA))
-                    return (T)(object)new DSACryptoServiceProvider(cspParams);
-                //begin: gost
-                if (typeof(T) == typeof(Gost3410))
-                    return (T)(object)new Gost3410CryptoServiceProvider(cspParams);
-                if (typeof(T) == typeof(Gost3410_2012_256))
-                    return (T)(object)new Gost3410_2012_256CryptoServiceProvider(cspParams);
-                if (typeof(T) == typeof(Gost3410_2012_512))
-                    return (T)(object)new Gost3410_2012_512CryptoServiceProvider(cspParams);
-                //end: gost
+                    if (silent)
+                    {
+                        cspParams.Flags |= CspProviderFlags.NoPrompt;
+                    }
+
+                    if (typeof(T) == typeof(RSA))
+                        return (T)(object)new RSACryptoServiceProvider(cspParams);
+                    if (typeof(T) == typeof(DSA))
+                        return (T)(object)new DSACryptoServiceProvider(cspParams);
+                    //begin: gost
+                    if (typeof(T) == typeof(Gost3410))
+                        return (T)(object)new Gost3410CryptoServiceProvider(cspParams);
+                    if (typeof(T) == typeof(Gost3410_2012_256))
+                        return (T)(object)new Gost3410_2012_256CryptoServiceProvider(cspParams);
+                    if (typeof(T) == typeof(Gost3410_2012_512))
+                        return (T)(object)new Gost3410_2012_512CryptoServiceProvider(cspParams);
+                    //end: gost                
 
                 Debug.Fail($"Unknown CAPI key type request: {typeof(T).FullName}");
                 return null;

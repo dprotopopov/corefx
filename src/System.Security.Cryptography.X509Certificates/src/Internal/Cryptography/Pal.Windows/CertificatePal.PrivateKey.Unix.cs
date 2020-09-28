@@ -19,6 +19,80 @@ namespace Internal.Cryptography.Pal
 {
     internal sealed partial class CertificatePal : IDisposable, ICertificatePal
     {
+        // begin: gost
+        public unsafe void SetCspPrivateKey(AsymmetricAlgorithm key)
+        {
+            if (key == null)
+            {
+                return;
+            }
+            CspKeyContainerInfo keyContainerInfo;
+            switch (key.SignatureAlgorithm)
+            {
+                case GostConstants.XmlSignatureAlgorithm2001:
+                {
+                    Gost3410CryptoServiceProvider asymmetricAlgorithm = key as Gost3410CryptoServiceProvider;
+                    keyContainerInfo = asymmetricAlgorithm.CspKeyContainerInfo;
+                    break;
+                }
+                case GostConstants.XmlSignatureAlgorithm2012_256:
+                {
+                    Gost3410_2012_256CryptoServiceProvider asymmetricAlgorithm = key as Gost3410_2012_256CryptoServiceProvider;
+                    keyContainerInfo = asymmetricAlgorithm.CspKeyContainerInfo;
+                    break;
+                }
+                case GostConstants.XmlSignatureAlgorithm2012_512:
+                {
+                    Gost3410_2012_512CryptoServiceProvider asymmetricAlgorithm = key as Gost3410_2012_512CryptoServiceProvider;
+                    keyContainerInfo = asymmetricAlgorithm.CspKeyContainerInfo;
+                    break;
+                }
+                case "RSA":
+                {
+                    RSACryptoServiceProvider asymmetricAlgorithm = key as RSACryptoServiceProvider;
+                    keyContainerInfo = asymmetricAlgorithm.CspKeyContainerInfo;
+                    break;
+                }
+                case "DSA":
+                {
+                    DSACryptoServiceProvider asymmetricAlgorithm = key as DSACryptoServiceProvider;
+                    keyContainerInfo = asymmetricAlgorithm.CspKeyContainerInfo;
+                    break;
+                }
+                default:
+                {
+                    throw new PlatformNotSupportedException();
+                }
+            }
+
+            SafeLocalAllocHandle ptr = SafeLocalAllocHandle.InvalidHandle;
+
+            fixed (byte* keyName = Encoding.UTF32.GetBytes(keyContainerInfo.KeyContainerName))
+            fixed (byte* provName = Encoding.UTF32.GetBytes(keyContainerInfo.ProviderName))
+            {
+                CRYPT_KEY_PROV_INFO keyProvInfo = new CRYPT_KEY_PROV_INFO();
+                keyProvInfo.pwszContainerName = (char*)keyName;
+                keyProvInfo.pwszProvName = (char*)provName;
+                keyProvInfo.dwProvType = keyContainerInfo.ProviderType;
+                keyProvInfo.dwFlags = keyContainerInfo.MachineKeyStore 
+                    ? CryptAcquireContextFlags.CRYPT_MACHINE_KEYSET 
+                    : CryptAcquireContextFlags.None;
+                keyProvInfo.cProvParam = 0;
+                keyProvInfo.rgProvParam = IntPtr.Zero;
+                keyProvInfo.dwKeySpec = (int)keyContainerInfo.KeyNumber;
+
+                if (!Interop.crypt32.CertSetCertificateContextProperty(
+                    _certContext,
+                    CertContextPropId.CERT_KEY_PROV_INFO_PROP_ID,
+                    CertSetPropertyFlags.None,
+                    &keyProvInfo))
+                {
+                    throw Marshal.GetLastWin32Error().ToCryptographicException();
+                }
+            }
+        }
+        // end: gost
+
         //
         // Returns the private key referenced by a store certificate. Note that despite the return type being declared "CspParameters",
         // the key can actually be a CNG key. To distinguish, examine the ProviderType property. If it is 0, this key is a CNG key with

@@ -972,7 +972,7 @@ namespace System.Net.Security
         internal bool VerifyRemoteCertificate(RemoteCertValidationCallback remoteCertValidationCallback, ref ProtocolToken alertToken)
         {
             if (remoteCertValidationCallback == null)
-                remoteCertValidationCallback = (sender, certificate, chain, policyErrors) => { return true; }
+                remoteCertValidationCallback = (sender, certificate, chain, policyErrors) => { return true; };
 
             if (NetEventSource.IsEnabled)
                 NetEventSource.Enter(this);

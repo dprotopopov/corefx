@@ -972,8 +972,8 @@ namespace System.Net.Security
         internal bool VerifyRemoteCertificate(RemoteCertValidationCallback remoteCertValidationCallback, ref ProtocolToken alertToken)
         {
             return true;
-
-            if (NetEventSource.IsEnabled)
+            
+/*          if (NetEventSource.IsEnabled)
                 NetEventSource.Enter(this);
 
             SslPolicyErrors sslPolicyErrors = SslPolicyErrors.None;
@@ -1077,7 +1077,7 @@ namespace System.Net.Security
             if (NetEventSource.IsEnabled)
                 NetEventSource.Exit(this, success);
 
-            return success;
+            return success; */
         }
 
         public ProtocolToken CreateFatalHandshakeAlertToken(SslPolicyErrors sslPolicyErrors, X509Chain chain)

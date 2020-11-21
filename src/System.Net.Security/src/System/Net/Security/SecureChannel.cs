@@ -971,8 +971,7 @@ namespace System.Net.Security
         //This method validates a remote certificate.
         internal bool VerifyRemoteCertificate(RemoteCertValidationCallback remoteCertValidationCallback, ref ProtocolToken alertToken)
         {
-            if (remoteCertValidationCallback == null)
-                remoteCertValidationCallback = (sender, certificate, chain, policyErrors) => { return true; };
+            return true;
 
             if (NetEventSource.IsEnabled)
                 NetEventSource.Enter(this);
